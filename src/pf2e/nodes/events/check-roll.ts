@@ -63,6 +63,7 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
             { key: "outcome", type: "outcome" },
             { key: "origin", type: "target" },
             { key: "target", type: "target" },
+            { key: "dc", type: "number" },
             { key: "item", type: "item" },
             { key: "reroll", type: "boolean" },
             { key: "options", type: "text", isArray: true },
@@ -84,6 +85,7 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
     }
 
     async _execute({
+        dc,
         isReroll,
         item,
         options,
@@ -100,6 +102,7 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
             this.setOutputValue("type", type);
         }
 
+        this.setOutputValue("dc", dc);
         this.setOutputValue("item", item);
         this.setOutputValue("options", options);
         this.setOutputValue("origin", origin);

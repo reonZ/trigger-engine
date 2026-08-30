@@ -995,6 +995,9 @@
                 "counter": {
                     "title": "Counter"
                 },
+                "dc": {
+                    "title": "DC"
+                },
                 "effect": {
                     "title": "Effect"
                 },
@@ -1097,9 +1100,6 @@
                     },
                     "create-persistent": {
                         "inputs": {
-                            "dc": {
-                                "title": "DC"
-                            },
                             "die": {
                                 "title": "Die"
                             },
