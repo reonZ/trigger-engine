@@ -17,6 +17,8 @@ import {
     isActionMessage,
     isSpellMessage,
     isValidTargetDocuments,
+    messageHasCastSpellOption,
+    messageHasUseActionOption,
 } from "foundry-helpers";
 
 class CreateMessageHook extends TriggerHook<
@@ -49,7 +51,11 @@ class CreateMessageHook extends TriggerHook<
 
         const { appliedDamage, origin, context } = message.flags[SYSTEM.id];
 
-        if (origin && isActionMessage(message)) {
+        if (
+            origin &&
+            isActionMessage(message) &&
+            (!game.toolbelt?.getToolSetting("actionable", "actionable") || messageHasUseActionOption(message))
+        ) {
             const data = await getMessageData<AbilityItemPF2e | FeatPF2e>(message, origin);
             if (!data) return;
 
@@ -62,7 +68,7 @@ class CreateMessageHook extends TriggerHook<
             } satisfies ActionChatOptions);
         }
 
-        if (origin && isSpellMessage(message, true)) {
+        if (origin && isSpellMessage(message) && messageHasCastSpellOption(message)) {
             const data = await getMessageData<SpellPF2e>(message, origin);
             if (!data) return;
 

@@ -24,6 +24,11 @@ class ActionChatEvent extends BaseEventNode<Inputs, Outputs> {
         ];
     }
 
+    get title(): string {
+        const key = game.toolbelt?.getToolSetting("actionable", "actionable") ? "title" : "titles.regular";
+        return this.localize(key) as string;
+    }
+
     get icon(): IconObject {
         return { unicode: "\ue1e3", fontWeight: "900" };
     }

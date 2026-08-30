@@ -1309,12 +1309,16 @@
                 },
                 "event": {
                     "action-chat-event": {
-                        "title": "Action Sent to Chat",
                         "inputs": {
                             "slug": {
                                 "title": "Action Slug"
                             }
-                        }
+                        },
+                        "title": "Action Used",
+                        "titles": {
+                            "regular": "Action Sent to Chat"
+                        },
+                        "tooltip": "If the <u>All Actionable</u> feature of the <u>PF2e Toolbelt</u> module is enabled, this event will only trigger on actual <u>Use</u>"
                     },
                     "attack-roll-event": {
                         "title": "Attack Rolled"
