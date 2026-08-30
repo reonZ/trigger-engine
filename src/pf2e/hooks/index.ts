@@ -7,6 +7,7 @@ import {
     ToolbeltSaveHook,
     TurnEndHook,
     TurnStartHook,
+    UpdateMessageHook,
 } from ".";
 
 export * from "./aura-hook";
@@ -16,6 +17,7 @@ export * from "./toolbelt-save";
 export * from "./trigger-region";
 export * from "./turn-end";
 export * from "./turn-start";
+export * from "./update-message";
 
 export default [
     AuraHook,
@@ -25,4 +27,5 @@ export default [
     ToolbeltSaveHook,
     TurnEndHook,
     TurnStartHook,
+    UpdateMessageHook,
 ] as (typeof TriggerHook)[];

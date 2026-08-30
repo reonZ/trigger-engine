@@ -51,15 +51,17 @@ class CreateMessageHook extends TriggerHook<
 
         const { appliedDamage, origin, context } = message.flags[SYSTEM.id];
 
-        if (
-            origin &&
-            isActionMessage(message) &&
-            (!game.toolbelt?.getToolSetting("actionable", "actionable") || messageHasUseActionOption(message))
-        ) {
-            const data = await getMessageData<AbilityItemPF2e | FeatPF2e>(message, origin);
-            if (!data) return;
+        if (isActionMessage(message)) {
+            if (
+                !origin ||
+                (game.toolbelt?.getToolSetting("actionable", "actionable") && !messageHasUseActionOption(message))
+            )
+                return;
 
-            const { item, originActor, targets } = data;
+            const item = await fromUuid<AbilityItemPF2e | FeatPF2e>(origin.uuid);
+            if (!item) return;
+
+            const { originActor, targets } = await getMessageData(message, origin);
             return this.executeEvent("action-chat-event", {
                 item,
                 options: origin.rollOptions ?? [],
@@ -68,19 +70,8 @@ class CreateMessageHook extends TriggerHook<
             } satisfies ActionChatOptions);
         }
 
-        if (origin && isSpellMessage(message) && messageHasCastSpellOption(message)) {
-            const data = await getMessageData<SpellPF2e>(message, origin);
-            if (!data) return;
-
-            const { item, originActor, targets } = data;
-            return this.executeEvent("spell-cast-event", {
-                castRank: origin.castRank,
-                item,
-                options: origin.rollOptions ?? [],
-                origin: originActor ? { actor: originActor } : undefined,
-                targets,
-                variant: origin.variant,
-            } satisfies SpellCastOptions);
+        if (isSpellMessage(message)) {
+            return onSpellCastMessage.call(this, message);
         }
 
         if (!context) return;
@@ -131,13 +122,28 @@ class CreateMessageHook extends TriggerHook<
     }
 }
 
-async function getMessageData<T extends ItemPF2e>(
+async function onSpellCastMessage(this: TriggerHook<SpellCastOptions>, message: ChatMessagePF2e) {
+    const origin = message.flags[SYSTEM.id].origin;
+    if (!origin || !messageHasCastSpellOption(message)) return;
+
+    const item = message.item;
+    if (!item?.isOfType("spell") || (item.hasVariants && !item.isVariant)) return;
+
+    const { originActor, targets } = await getMessageData(message, origin);
+    return this.executeEvent("spell-cast-event", {
+        castRank: origin.castRank,
+        item,
+        options: origin.rollOptions ?? [],
+        origin: originActor ? { actor: originActor } : undefined,
+        targets,
+        variant: origin.variant,
+    } satisfies SpellCastOptions);
+}
+
+async function getMessageData(
     message: ChatMessagePF2e,
     origin: ItemOriginFlag,
-): Promise<{ item: T; originActor: ActorPF2e | null; targets: TargetDocuments[] } | undefined> {
-    const item = await fromUuid<T>(origin.uuid);
-    if (!item) return;
-
+): Promise<{ originActor: ActorPF2e | null; targets: TargetDocuments[] }> {
     const originActor = origin?.actor ? await fromUuid<ActorPF2e>(origin.actor) : null;
     const targets = R.pipe(
         game.toolbelt?.api.targetHelper.getMessageTargets(message) ?? [],
@@ -148,7 +154,7 @@ async function getMessageData<T extends ItemPF2e>(
         R.filter(R.isTruthy),
     );
 
-    return { item, originActor, targets };
+    return { originActor, targets };
 }
 
 async function checkRollData(message: ChatMessagePF2e, reroll?: boolean): Promise<CheckRollOptions | undefined> {
@@ -224,7 +230,7 @@ type CheckRollOptions = WithPartial<BaseOptions, "target"> & {
 
 type DamageTakenType = (typeof CreateMessageHook.damageTakenTypes)[number];
 
-export { CreateMessageHook, checkRollData };
+export { CreateMessageHook, checkRollData, onSpellCastMessage };
 export type {
     ActionChatOptions,
     AttackRollOptions,
