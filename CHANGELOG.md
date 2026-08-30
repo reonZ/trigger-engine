@@ -1,3 +1,18 @@
+# 1.32.0
+
+- fix applications not enabling triggers that were previously saved with no nodes in their data
+  - this was only an issue while working on the triggers, a page reload would have solved the issue so there is no persisting problem
+- `pf2e-trigger`:
+  - `Action Send to Chat`:
+    - rename the default title to `Action Used`
+    - if the `All Actionable` feature of the `PF2e Toolbelt` is enabled, the event will only trigger on actual `Use` (you need toolbelt version `3.56.0` for that)
+    - the title of the node changes if you have the `All Actionable` enabled or not in your world
+  - add `DC` output to the `Check Rolled` event
+  - add new `Spell Cast` event
+    - it only triggers when actually casting a spell (not send-to-chat)
+    - if the spell has variants, it will only trigger after a variant has been selected instead of on message creation
+    - to take advantage of this event, you need a pf2e/sf2e systems version newer than `8.4.1`/`1.4.1`
+
 # 1.31.1
 
 - fix connections to `Return Gate` inputs visually disappearing
