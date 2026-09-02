@@ -1,3 +1,8 @@
+# 1.32.1
+
+- now display the `updated` icon on module triggers as well
+- fix module triggers not losing their `updated` flag on save which makes it impossible to completely collapse folders that contains locked triggers being disabled/enabled
+
 # 1.32.0
 
 - fix applications not enabling triggers that were previously saved with no nodes in their data
