@@ -379,7 +379,7 @@ class Blueprint extends PIXI.Application<HTMLCanvasElement> {
         const folders = R.pick(this.#modulesFolders, lockedIds) as Record<string, string>;
 
         this.#hasDeletedTriggers = false;
-        for (const trigger of triggers) {
+        for (const trigger of valids) {
             trigger.setUpdated(false);
         }
 
@@ -401,6 +401,7 @@ class Blueprint extends PIXI.Application<HTMLCanvasElement> {
         }
 
         localize.info("save-triggers.saved");
+        this.parent.render();
     }
 
     isEnabled({ id, locked }: MaybeTrigger): boolean {
