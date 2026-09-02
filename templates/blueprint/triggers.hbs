@@ -71,10 +71,11 @@
                     {{#if trigger.invalid}}disabled{{else if (@root.isEnabled trigger)}}checked{{/if}}
                 >
                 <a class="name" data-action="select-trigger">{{trigger.label}}</a>
+                {{#if trigger.updated}}
+                <i class="fa-solid fa-floppy-disk" {{{@root.i18n.tooltip 'updated'}}}></i>
+                {{/if}}
                 {{#if trigger.locked}}
                 <i class="fa-solid fa-lock" {{{@root.i18n.tooltip 'locked'}}}></i>
-                {{else if trigger.updated}}
-                <i class="fa-solid fa-floppy-disk" {{{@root.i18n.tooltip 'updated'}}}></i>
                 {{/if}}
                 <div class="trigger-description"></div>
             </div>
