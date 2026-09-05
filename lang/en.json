@@ -1569,6 +1569,12 @@
                         "title": "Extra Traits"
                     }
                 },
+                "toolbelt": {
+                    "targets": {
+                        "title": "Toolbelt Targets",
+                        "tooltip": "Only used if the <u>Target Helper</u> feature of the <u>PF2e Toolbelt</u> module is enabled"
+                    }
+                },
                 "uuid": {
                     "pf2e": {
                         "title": "PF2e Source UUID"

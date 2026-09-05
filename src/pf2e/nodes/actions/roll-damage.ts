@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BaseActionNode } from "engine";
-import { ItemPF2e, RollDamageOptions, rollDamageFromFormula } from "foundry-helpers";
+import { ItemPF2e, RollDamageOptions, ScenePF2e, rollDamageFromFormula } from "foundry-helpers";
 import {
     DifficultyClassInputs,
     DifficultyClassState,
@@ -11,7 +11,7 @@ import {
     getRollData,
     rollDataSchemas,
 } from ".";
-import { PF2eInputEntry } from "pf2e";
+import { PF2eInputEntry, toolbeltTargetsEntry } from "pf2e";
 
 class RollDamageActionNode extends BaseActionNode<"out", Inputs, never, never, never, DifficultyClassState> {
     static get type(): "roll-damage" {
@@ -30,7 +30,7 @@ class RollDamageActionNode extends BaseActionNode<"out", Inputs, never, never, n
         return [
             { key: "formula", type: "text" },
             { key: "origin", type: "target" },
-            { key: "targets", type: "target", isArray: true },
+            toolbeltTargetsEntry(),
             { key: "item", type: "item" },
             ...rollDataSchemas(),
             ...dcSchemas(),
@@ -64,7 +64,7 @@ class RollDamageActionNode extends BaseActionNode<"out", Inputs, never, never, n
             target: targets[0],
             toolbelt: {
                 item: item?.uuid,
-                targets: this.getTargetsTokens(targets, true, { scene: this.sceneContext }),
+                targets: this.getTargetsTokens(targets, true, { scene: this.sceneContext as ScenePF2e }),
             },
         };
 

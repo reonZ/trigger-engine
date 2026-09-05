@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BaseEventNode } from "engine";
-import { ActionChatOptions, PF2eInputEntry, PF2eOutputEntry } from "pf2e";
+import { ActionChatOptions, PF2eInputEntry, PF2eOutputEntry, toolbeltTargetsEntry } from "pf2e";
 
 class ActionChatEvent extends BaseEventNode<Inputs, Outputs> {
     static get type(): "action-chat-event" {
@@ -20,7 +20,7 @@ class ActionChatEvent extends BaseEventNode<Inputs, Outputs> {
             { key: "origin", type: "target" },
             { key: "item", type: "item" },
             { key: "options", type: "text", isArray: true },
-            { key: "targets", type: "target", isArray: true },
+            toolbeltTargetsEntry(),
         ];
     }
 

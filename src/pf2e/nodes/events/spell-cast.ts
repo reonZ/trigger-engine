@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BaseEventNode } from "engine";
-import { PF2eInputEntry, PF2eOutputEntry, SpellCastOptions } from "pf2e";
+import { PF2eInputEntry, PF2eOutputEntry, SpellCastOptions, toolbeltTargetsEntry } from "pf2e";
 
 class SpellCastEvent extends BaseEventNode<Inputs, Outputs> {
     static get type(): "spell-cast-event" {
@@ -21,7 +21,7 @@ class SpellCastEvent extends BaseEventNode<Inputs, Outputs> {
             { key: "item", type: "item" },
             { key: "rank", type: "number" },
             { key: "options", type: "text", isArray: true },
-            { key: "targets", type: "target", isArray: true },
+            toolbeltTargetsEntry(),
         ];
     }
 
@@ -47,7 +47,7 @@ type Inputs = {
     slug: string;
 };
 
-type Outputs = Omit<SpellCastOptions, "variant" | "castRank"> & {
+type Outputs = Omit<SpellCastOptions, "castRank" | "variant"> & {
     rank: number;
 };
 
