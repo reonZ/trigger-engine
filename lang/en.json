@@ -1251,11 +1251,6 @@
                         "title": "Has Item with Source UUID"
                     },
                     "has-item-slug": {
-                        "inputs": {
-                            "slug": {
-                                "title": "Item Slug"
-                            }
-                        },
                         "title": "Has Item with Slug"
                     },
                     "has-option": {
@@ -1551,6 +1546,11 @@
                     },
                     "sf2e": {
                         "title": "SF2e Image Path"
+                    }
+                },
+                "item": {
+                    "slug": {
+                        "title": "Item Slug"
                     }
                 },
                 "item-extraction": {

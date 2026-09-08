@@ -1,9 +1,17 @@
 import { IconObject } from "_zod";
 import { BaseEffectActionNode, getIconFromDoubleUuid } from "pf2e";
 
-class EffectBadgeActionNode extends BaseEffectActionNode {
+class EffectBadgeActionNode extends BaseEffectActionNode<"condition" | "effect"> {
     static get type(): "effect-badge" {
         return "effect-badge";
+    }
+
+    static get tags(): string[] {
+        return [...BaseEffectActionNode.tags, "condition"];
+    }
+
+    get effectTypes(): ["condition", "effect"] {
+        return ["condition", "effect"];
     }
 
     get icon(): IconObject | string | null {
@@ -15,6 +23,20 @@ class EffectBadgeActionNode extends BaseEffectActionNode {
         const value = await this.getInputValue("by");
 
         if (!value || !item) {
+            return this.executeNext("out");
+        }
+
+        if (item.isOfType("condition")) {
+            if (item.system.value.isValued) {
+                const current = item.system.value.value;
+                const newValue = current + value;
+
+                if (newValue <= 0) {
+                    await item.delete();
+                } else {
+                    await item.update({ "system.value.value": newValue });
+                }
+            }
             return this.executeNext("out");
         }
 

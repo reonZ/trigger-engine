@@ -1,4 +1,4 @@
-import { ActorPF2e, ItemPF2e, findItemWithSlug } from "foundry-helpers";
+import { ActorPF2e, ItemPF2e, findItemWithSlug, localize } from "foundry-helpers";
 import { PF2eInputEntry } from "pf2e";
 import { BaseHasItemConditionNode } from "..";
 
@@ -8,7 +8,10 @@ class HasItemSlugConditionNode extends BaseHasItemConditionNode<Inputs> {
     }
 
     static get defineInputs(): PF2eInputEntry[] {
-        return [...BaseHasItemConditionNode.defineInputs, { key: "slug", type: "text" }];
+        return [
+            ...BaseHasItemConditionNode.defineInputs,
+            { key: "slug", type: "text", label: localize("pf2e-trigger.shared.item.slug.title") },
+        ];
     }
 
     async getItem<T extends ActorPF2e>(actor: T): Promise<ItemPF2e<T> | null> {
