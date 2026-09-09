@@ -1,3 +1,10 @@
+#
+
+- `pf2e-trigger`:
+  - change the label of the `Targets` entries for the `Action Used`, `Roll Damage` and `Spell Cast` nodes to `Toolbelt Targets` as well as adding a tooltip to them
+  - add `Slug` state to the `Update Effect Badge` and `Update Effect Duration` nodes
+  - the `Update Effect Badge` can now also update `Condition` items
+
 # 1.32.1
 
 - now display the `updated` icon on module triggers as well
