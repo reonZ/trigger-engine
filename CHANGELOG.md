@@ -1,4 +1,4 @@
-#
+# 1.33.0
 
 - `pf2e-trigger`:
   - change the label of the `Targets` entries for the `Action Used`, `Roll Damage` and `Spell Cast` nodes to `Toolbelt Targets` as well as adding a tooltip to them
