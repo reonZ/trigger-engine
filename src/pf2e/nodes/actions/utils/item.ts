@@ -28,17 +28,17 @@ async function selectChoiceSets(this: BaseActionNode<any, any, any, "choices">, 
         const choiceIndex = Number(index);
         if (!R.isNumber(choiceIndex) || !R.isIncludedIn(mode, CreateItemActionNode.modes)) continue;
 
-        const choiceSet = source.system.rules.find((rule: ChoiceSetSource): rule is ChoiceSetSource => {
+        const rule = source.system.rules.find((rule: ChoiceSetSource): rule is ChoiceSetSource => {
             if (rule.key !== "ChoiceSet") return false;
             return mode === "flag" ? rule.flag === name : rule.rollOption === name;
         });
 
-        if (R.isArray(choiceSet?.choices)) {
-            const choice = choiceSet.choices.at(choiceIndex) as object | undefined;
+        if (R.isArray(rule?.choices)) {
+            const choice = rule.choices.at(choiceIndex) as object | undefined;
             const value = choice && "value" in choice && choice.value;
 
             if (R.isNonNullish(value)) {
-                choiceSet.selection = value;
+                rule.selection = value;
             }
         }
     }

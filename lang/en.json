@@ -1075,7 +1075,16 @@
                         "title": "Create Effect"
                     },
                     "create-effect-source": {
+                        "customs": {
+                            "inputs": {
+                                "marks": {
+                                    "label": "TokenMark",
+                                    "tooltip": "<ul><li>slug:&lt;slug&gt;:&lt;uuid&gt;</li></ul>"
+                                }
+                            }
+                        },
                         "groups": {
+                            "marks": "TokenMark Selections",
                             "origin": "system.context"
                         },
                         "title": "Create Effect From Source"

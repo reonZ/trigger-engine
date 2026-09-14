@@ -1,6 +1,15 @@
 import { IconObject } from "_zod";
 import { BaseActionNode, CustomInputSchema } from "engine";
-import { getDocumentFromUUID, getItemSource, ItemPF2e, localize, R } from "foundry-helpers";
+import {
+    getDocumentFromUUID,
+    getItemSource,
+    ItemPF2e,
+    ItemSourcePF2e,
+    localize,
+    R,
+    RuleElementSource,
+    TokenDocumentUUID,
+} from "foundry-helpers";
 import { getDoubleUuidValue, PF2eInputEntry } from "pf2e";
 import {
     choiceSetCustomInput,
@@ -10,7 +19,7 @@ import {
     selectChoiceSets,
 } from ".";
 
-class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, "choices"> {
+class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, "choices" | "marks"> {
     static get type(): "create-effect-source" {
         return "create-effect-source";
     }
@@ -34,7 +43,7 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, 
     }
 
     static get defineCustomInputs(): CustomInputSchema[] {
-        return [choiceSetCustomInput()];
+        return [choiceSetCustomInput(), { slug: "marks", group: "marks", types: ["text"] }];
     }
 
     get icon(): IconObject {
@@ -90,6 +99,8 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, 
             };
         }
 
+        // we set the tokenmarks selections for the item
+        await selectTokenMarks.call(this, source);
         // we set the choicesets selections for the item
         await selectChoiceSets.call(this, source);
 
@@ -99,11 +110,33 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, 
     }
 }
 
+async function selectTokenMarks(this: BaseActionNode<any, any, any, "marks">, source: ItemSourcePF2e) {
+    const marks: string[] = await this.getCustomInputsValues("marks");
+
+    for (const path of marks) {
+        const [_, slug, uuid] = R.split(path, ":");
+        const parsed = foundry.utils.parseUuid(uuid);
+        if (parsed?.primaryType !== "Scene" || parsed.type !== "Token") continue;
+
+        const rule = source.system.rules.find((rule): rule is TokenMarkSource => {
+            return rule.key === "TokenMark" && rule.slug === slug;
+        });
+
+        if (rule) {
+            rule.uuid = uuid as TokenDocumentUUID;
+        }
+    }
+}
+
 type Inputs = Omit<CreateItemInputs, "duplicate"> & {
     counter: number;
     item?: ItemPF2e;
     options: string[];
     origin?: TargetDocuments;
+};
+
+type TokenMarkSource = RuleElementSource & {
+    uuid?: TokenDocumentUUID;
 };
 
 export { CreateEffectSourceActionNode };
