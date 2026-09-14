@@ -1057,6 +1057,7 @@
                 }
             },
             "group": {
+                "choiceset": "ChoiceSet Selections",
                 "duration": "Duration Data",
                 "roll": "Roll Data",
                 "rule": "Rule Elements",
@@ -1080,17 +1081,6 @@
                         "title": "Create Effect From Source"
                     },
                     "create-item": {
-                        "customs": {
-                            "inputs": {
-                                "choices": {
-                                    "label": "ChoiceSet",
-                                    "tooltip": "<ul><li>flag:&lt;flag&gt;:&lt;index&gt;</li><li>rollOption:&lt;rollOption&gt;:&lt;index&gt;</li></ul>"
-                                }
-                            }
-                        },
-                        "groups": {
-                            "choices": "ChoiceSet Selections"
-                        },
                         "inputs": {
                             "duplicate": {
                                 "title": "Allow Duplicate"
@@ -1549,6 +1539,10 @@
                     }
                 },
                 "item": {
+                    "choiceset": {
+                        "label": "ChoiceSet",
+                        "tooltip": "<ul><li>flag:&lt;flag&gt;:&lt;index&gt;</li><li>rollOption:&lt;rollOption&gt;:&lt;index&gt;</li></ul>"
+                    },
                     "slug": {
                         "title": "Item Slug"
                     }

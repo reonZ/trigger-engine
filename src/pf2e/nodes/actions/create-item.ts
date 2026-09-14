@@ -1,23 +1,16 @@
 import { IconObject } from "_zod";
 import { BaseActionNode, CustomInputSchema } from "engine";
-import {
-    ActorPF2e,
-    ChoiceSetSource,
-    getDocumentFromUUID,
-    getItemSource,
-    ItemPF2e,
-    ItemType,
-    localize,
-    R,
-} from "foundry-helpers";
+import { ActorPF2e, getDocumentFromUUID, getItemSource, ItemPF2e, ItemType, localize } from "foundry-helpers";
 import { PF2eInputEntry } from "pf2e";
 import {
+    choiceSetCustomInput,
     createTargetsEmbeddedItem,
     DoubleUuidInputs,
     doubleUuidSchemas,
     getDoubleUuidValue,
     getIconFromDoubleUuid,
     getLocalItemFromSourceUuid,
+    selectChoiceSets,
 } from "..";
 
 class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never, "choices"> {
@@ -49,7 +42,7 @@ class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never
     }
 
     static get defineCustomInputs(): CustomInputSchema[] {
-        return [{ slug: "choices", group: "choices", types: ["text"] }];
+        return [choiceSetCustomInput()];
     }
 
     get title(): string | null {
@@ -90,27 +83,7 @@ class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never
         }
 
         // we set the choicesets selections for the item
-        const choiceSets: string[] = await this.getCustomInputsValues("choices");
-
-        for (const path of choiceSets) {
-            const [mode, name, index] = R.split(path, ":");
-            const choiceIndex = Number(index);
-            if (!R.isNumber(choiceIndex) || !R.isIncludedIn(mode, CreateItemActionNode.modes)) continue;
-
-            const choiceSet = source.system.rules.find((rule: ChoiceSetSource): rule is ChoiceSetSource => {
-                if (rule.key !== "ChoiceSet") return false;
-                return mode === "flag" ? rule.flag === name : rule.rollOption === name;
-            });
-
-            if (R.isArray(choiceSet?.choices)) {
-                const choice = choiceSet.choices.at(choiceIndex) as object | undefined;
-                const value = choice && "value" in choice && choice.value;
-
-                if (R.isNonNullish(value)) {
-                    choiceSet.selection = value;
-                }
-            }
-        }
+        await selectChoiceSets.call(this, source);
 
         await createTargetsEmbeddedItem(targets, source);
 

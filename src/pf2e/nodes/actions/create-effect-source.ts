@@ -1,10 +1,16 @@
 import { IconObject } from "_zod";
-import { BaseActionNode } from "engine";
+import { BaseActionNode, CustomInputSchema } from "engine";
 import { getDocumentFromUUID, getItemSource, ItemPF2e, localize, R } from "foundry-helpers";
 import { getDoubleUuidValue, PF2eInputEntry } from "pf2e";
-import { CreateItemActionNode, CreateItemInputs, createTargetsEmbeddedItem } from ".";
+import {
+    choiceSetCustomInput,
+    CreateItemActionNode,
+    CreateItemInputs,
+    createTargetsEmbeddedItem,
+    selectChoiceSets,
+} from ".";
 
-class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs> {
+class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, "choices"> {
     static get type(): "create-effect-source" {
         return "create-effect-source";
     }
@@ -25,6 +31,10 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs> {
             { key: "item", type: "item", group: "origin" },
             { key: "options", type: "text", group: "origin", isArray: true },
         ];
+    }
+
+    static get defineCustomInputs(): CustomInputSchema[] {
+        return [choiceSetCustomInput()];
     }
 
     get icon(): IconObject {
@@ -79,6 +89,9 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs> {
                 target: null,
             };
         }
+
+        // we set the choicesets selections for the item
+        await selectChoiceSets.call(this, source);
 
         await createTargetsEmbeddedItem(targets, source);
 
