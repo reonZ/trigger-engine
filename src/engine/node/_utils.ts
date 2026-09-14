@@ -152,8 +152,9 @@ function getEntrySchemas(
             key: entry.id,
             label: entry.label,
             slug: entry.slug,
+            tooltip: schema.tooltip,
             type: entry.type,
-        } as any;
+        };
     });
 
     return [...parsed, ...parseSchemas(filtered, parser)];

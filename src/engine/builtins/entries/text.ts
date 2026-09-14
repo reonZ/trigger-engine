@@ -70,9 +70,8 @@ class TextEntry extends BuiltInNodeEntry<string, TextFieldSchema> {
     }
 
     get options(): SelectFieldOption[] {
-        return (this.#options ??= R.map(
-            this.field?.options ?? [],
-            (option): SelectFieldOption => (R.isString(option) ? { value: option } : option),
+        return (this.#options ??= R.map(this.field?.options ?? [], (option): SelectFieldOption =>
+            R.isString(option) ? { value: option } : option,
         ));
     }
 
