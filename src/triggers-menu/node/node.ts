@@ -1302,7 +1302,11 @@ class BlueprintNode extends PIXI.Container {
             {
                 label: localize.path("builtins.node.action", CONSOLE_LOG, "title"),
                 icon: `<i class="fa-solid fa-terminal"></i>`,
-                visible: !locked && selected.length === 1 && this.outputs.size > 0,
+                visible:
+                    !locked &&
+                    selected.length === 1 &&
+                    this.outputs.size > 0 &&
+                    this.#node.parent.application.nodes.has(CONSOLE_LOG),
                 onClick: () => {
                     this.#createConsoleLogNode();
                 },
