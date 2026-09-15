@@ -72,14 +72,20 @@ async function createTargetsEmbeddedItem(targets: TargetDocuments[], source: Pre
         );
     });
 
+    const activeGM = game.users.activeGM;
+    if (!activeGM) return;
+
+    // const actors = targets.map(({ actor }) => actor);
+
+    // we have rules to set still, so we redirect item creation to owners
     if (hasRulesToSet) {
         return Promise.all(
-            targets.map((target) => {
-                const user = primaryPlayerOwner(target.actor) ?? game.user;
+            targets.map(({ actor }) => {
+                const user = primaryPlayerOwner(actor) ?? activeGM;
                 const queryArgs: CreateItemQueryOptions = {
                     _type: "create-item",
+                    actors: [actor.uuid],
                     source,
-                    target: { actor: target.actor.uuid, token: target.token?.uuid },
                 };
 
                 return user.query(MODULE.path("user-query"), queryArgs);
@@ -87,7 +93,19 @@ async function createTargetsEmbeddedItem(targets: TargetDocuments[], source: Pre
         );
     }
 
-    await processCreateTargetsEmbeddedItem(targets, source);
+    // we aren't a GM user so we redirect to the active GM instead
+    if (!game.user.isGM) {
+        return activeGM.query(MODULE.path("user-query"), {
+            _type: "create-item",
+            actors: targets.map(({ actor }) => actor.uuid),
+            source,
+        } satisfies CreateItemQueryOptions);
+    }
+
+    await processCreateTargetsEmbeddedItem(
+        targets.map(({ actor }) => actor),
+        source,
+    );
 }
 
 type TokenMarkSource = RuleElementSource & {

@@ -10,7 +10,7 @@ import {
     TriggerApplication,
     TriggerPath,
 } from "engine";
-import { convertTargetFromPacket } from "foundry-helpers";
+import { ActorPF2e, R } from "foundry-helpers";
 import { CreateItemQueryOptions, processCreateTargetsEmbeddedItem } from "queries-pf2e";
 
 async function onUserQuery(data: UserQueryOptions) {
@@ -25,8 +25,8 @@ async function onUserQuery(data: UserQueryOptions) {
             return AwaitSelectActionNode.createDialog(data);
         }
         case "create-item": {
-            const target = await convertTargetFromPacket(data.target);
-            return target && processCreateTargetsEmbeddedItem([target], data.source);
+            const actors = await Promise.all(data.actors.map(async (uuid) => await fromUuid<ActorPF2e>(uuid)));
+            return processCreateTargetsEmbeddedItem(R.filter(actors, R.isTruthy), data.source);
         }
         case "execute-event": {
             const { applicationKey, args, eventName, userId } = data;
