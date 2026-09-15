@@ -1,3 +1,11 @@
+# 1.34.0
+
+- fix custom entries not using literal tooltip
+- fix `Console Log` node contextmenu option being shown in applications that don't have the console-log action node
+- `pf2e-trigger`:
+  - all action nodes that create items (e.g. `Create Item`, `Create Effect`, etc.) will now check if the item's source contains any Rule Element of type `ChoiceSet` or `TokenMark` that have yet to be set, if any, the creation of the item will be redirected to a player owner of the actor (or the active GM if none) instead of the current user the trigger is executed on
+  - now allow you to set `ChoiceSet` & `TokenMark` selections in the `Create Effect From Source` actio node
+
 # 1.33.0
 
 - `pf2e-trigger`:
