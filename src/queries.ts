@@ -10,33 +10,38 @@ import {
     TriggerApplication,
     TriggerPath,
 } from "engine";
+import { convertTargetFromPacket } from "foundry-helpers";
+import { CreateItemQueryOptions, processCreateTargetsEmbeddedItem } from "queries-pf2e";
 
-function onUserQuery(data: UserQueryOptions) {
-    if (data._type === "await-confirm") {
-        return AwaitConfirmActionNode.createDialog(data);
-    }
-
-    if (data._type === "await-input") {
-        return AwaitInputActionNode.createDialog(data);
-    }
-
-    if (data._type === "await-select") {
-        return AwaitSelectActionNode.createDialog(data);
-    }
-
-    if (data._type === "execute-event") {
-        const { applicationKey, args, eventName, userId } = data;
-        return TriggerApplication.executeEvent(userId, applicationKey, eventName, args);
-    }
-
-    if (data._type === "execute-trigger") {
-        const { args, eventName, triggerPath, userId } = data;
-        return TriggerApplication.executeTriggerEvent(userId, triggerPath, eventName, args);
+async function onUserQuery(data: UserQueryOptions) {
+    switch (data._type) {
+        case "await-confirm": {
+            return AwaitConfirmActionNode.createDialog(data);
+        }
+        case "await-input": {
+            return AwaitInputActionNode.createDialog(data);
+        }
+        case "await-select": {
+            return AwaitSelectActionNode.createDialog(data);
+        }
+        case "create-item": {
+            const target = await convertTargetFromPacket(data.target);
+            return target && processCreateTargetsEmbeddedItem([target], data.source);
+        }
+        case "execute-event": {
+            const { applicationKey, args, eventName, userId } = data;
+            return TriggerApplication.executeEvent(userId, applicationKey, eventName, args);
+        }
+        case "execute-trigger": {
+            const { args, eventName, triggerPath, userId } = data;
+            return TriggerApplication.executeTriggerEvent(userId, triggerPath, eventName, args);
+        }
     }
 }
 
 type UserQueryOptions =
     | ConfirmDialogQueryOptions
+    | CreateItemQueryOptions
     | ExecuteEventQueryOptions
     | ExecuteTriggerQueryOptions
     | InputDialogQueryOptions

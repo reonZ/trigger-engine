@@ -1,14 +1,16 @@
 import { BaseActionNode, CustomInputSchema } from "engine";
 import {
-    ActorPF2e,
     ChoiceSetSource,
-    DatabaseCreateOperation,
-    ItemPF2e,
     ItemSourcePF2e,
     localize,
+    MODULE,
+    primaryPlayerOwner,
     R,
+    RuleElementSource,
+    TokenDocumentUUID,
 } from "foundry-helpers";
 import { CreateItemActionNode } from "..";
+import { CreateItemQueryOptions, processCreateTargetsEmbeddedItem } from "queries-pf2e";
 
 function choiceSetCustomInput(): CustomInputSchema {
     return {
@@ -44,31 +46,52 @@ async function selectChoiceSets(this: BaseActionNode<any, any, any, "choices">, 
     }
 }
 
-async function createTargetsEmbeddedItem<T extends ItemPF2e>(
-    targets: TargetDocuments[],
-    source: PreCreate<ItemSourcePF2e>,
-): Promise<boolean> {
-    let i = 3;
+async function selectTokenMarks(this: BaseActionNode<any, any, any, "marks">, source: ItemSourcePF2e) {
+    const marks: string[] = await this.getCustomInputsValues("marks");
 
-    const operations = R.map(targets, ({ actor }): DatabaseCreateOperation<ActorPF2e> => {
-        return {
-            action: "create",
-            data: [foundry.utils.deepClone(source)],
-            documentName: "Item",
-            parent: actor,
-        };
-    });
+    for (const path of marks) {
+        const [_, slug, uuid] = R.split(path, ":");
+        const parsed = foundry.utils.parseUuid(uuid);
+        if (parsed?.primaryType !== "Scene" || parsed.type !== "Token") continue;
 
-    while (i) {
-        try {
-            await foundry.documents.modifyBatch(operations);
-            return true;
-        } catch {
-            i--;
+        const rule = source.system.rules.find((rule): rule is TokenMarkSource => {
+            return rule.key === "TokenMark" && rule.slug === slug;
+        });
+
+        if (rule) {
+            rule.uuid = uuid as TokenDocumentUUID;
         }
     }
-
-    return false;
 }
 
-export { choiceSetCustomInput, createTargetsEmbeddedItem, selectChoiceSets };
+async function createTargetsEmbeddedItem(targets: TargetDocuments[], source: PreCreate<ItemSourcePF2e>) {
+    const hasRulesToSet = source.system?.rules?.some((rule) => {
+        return (
+            (rule.key === "ChoiceSet" && R.isNullish((rule as ChoiceSetSource).selection)) ||
+            (rule.key === "TokenMark" && !R.isString(rule.slug))
+        );
+    });
+
+    if (hasRulesToSet) {
+        return Promise.all(
+            targets.map((target) => {
+                const user = primaryPlayerOwner(target.actor) ?? game.user;
+                const queryArgs: CreateItemQueryOptions = {
+                    _type: "create-item",
+                    source,
+                    target: { actor: target.actor.uuid, token: target.token?.uuid },
+                };
+
+                return user.query(MODULE.path("user-query"), queryArgs);
+            }),
+        );
+    }
+
+    await processCreateTargetsEmbeddedItem(targets, source);
+}
+
+type TokenMarkSource = RuleElementSource & {
+    uuid?: TokenDocumentUUID;
+};
+
+export { choiceSetCustomInput, createTargetsEmbeddedItem, selectChoiceSets, selectTokenMarks };
