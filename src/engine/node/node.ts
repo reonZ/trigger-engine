@@ -1,5 +1,6 @@
 import { IconObject } from "_zod";
 import {
+    ApplicationKey,
     BridgeSchemaInput,
     CustomInputSchema,
     CustomOutputSchema,
@@ -464,6 +465,15 @@ class TriggerNode<
      * Stuff that is not meant to be overridden, don't be an idiot!
      * *************************************************************
      */
+
+    /**
+     * @private
+     *
+     * The key of the parent application.
+     */
+    get applicationKey(): ApplicationKey {
+        return this.#parent.applicationKey;
+    }
 
     /**
      * @private
