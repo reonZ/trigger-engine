@@ -809,6 +809,7 @@
             "special": {
                 "break": "Can break current process",
                 "custom": "Has Custom Entries",
+                "delay": "Can Delay Execution",
                 "emit": "Awaits User Input",
                 "loop": "Can Loop Over",
                 "state": "Has Multiple States",
