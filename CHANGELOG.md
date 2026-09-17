@@ -7,7 +7,7 @@
   - if the user isn't connected, the node will not be executed neither will the next node be
   - the node will not preemptively check if the user can execute the macro the same way it isn't checking if the current one can
 - fix `delay` special icon localization
-- pf2e-trigger`:
+- pf2e-trigger:
   - fix create item nodes (e.g. `Create Item`, `Create Effect`, etc.) not redirecting to a GM if the current user isn't one
 
 # 1.34.0
