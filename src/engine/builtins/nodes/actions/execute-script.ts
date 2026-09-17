@@ -1,5 +1,5 @@
-import { BuiltinsCustomEntry, BuiltinsInputEntry, CustomInputSchema } from "engine";
-import { CompendiumIndexData, MODULE, R, isScriptMacro } from "foundry-helpers";
+import { ApplicationKey, BuiltinsCustomEntry, BuiltinsInputEntry, CustomInputSchema, TriggerApplication } from "engine";
+import { CompendiumIndexData, MODULE, MacroUUID, R, isScriptMacro } from "foundry-helpers";
 import { BaseActionNode } from ".";
 import { IconObject } from "_zod";
 
@@ -15,14 +15,7 @@ const DEFAULT_SCRIPT = `/**
  */
 return [];`;
 
-class ExecuteScriptActionNode extends BaseActionNode<
-    "out",
-    { script: string; macro: string },
-    never,
-    "input",
-    "output",
-    "macro" | "script"
-> {
+class ExecuteScriptActionNode extends BaseActionNode<"out", Inputs, never, "input", "output", "macro" | "script"> {
     static get type(): "execute-script" {
         return "execute-script";
     }
@@ -51,6 +44,10 @@ class ExecuteScriptActionNode extends BaseActionNode<
                 type: "text",
                 state: "macro",
             },
+            {
+                key: "user",
+                type: "user",
+            },
         ];
     }
 
@@ -60,6 +57,56 @@ class ExecuteScriptActionNode extends BaseActionNode<
 
     static get defineCustomOutputs(): BuiltinsCustomEntry[] | null {
         return [{ slug: "output", array: true }];
+    }
+
+    static async processExecuteScript({
+        applicationKey,
+        values,
+        code,
+        uuid,
+    }: ExecuteScriptQueryOptions): Promise<unknown> {
+        const application = TriggerApplication.instances.get(applicationKey);
+
+        if (!application) {
+            return new Error("Couldn't recover the application");
+        }
+
+        const result = await this.executeScript({
+            values: await application.convertValuesFomEmitable(values),
+            code: code,
+            uuid: uuid,
+        });
+
+        return R.isArray(result) ? application.convertValuesToEmitable(result) : result;
+    }
+
+    static async executeScript({
+        values,
+        code,
+        uuid,
+    }: ExecuteScriptArgs): Promise<boolean | ReadonlyArray<unknown> | Error | undefined> {
+        const result = uuid
+            ? await this.#executeMacro(uuid, values)
+            : await this.#executeScriptCode(code ?? "", values);
+        return R.isArray(result) || R.isBoolean(result) || R.isError(result) ? result : undefined;
+    }
+
+    static async #executeMacro(uuid: MacroUUID, values: any[]): Promise<unknown> {
+        try {
+            const macro = await fromUuid(uuid);
+            return isScriptMacro(macro) ? await macro.execute({ inputs: values }) : undefined;
+        } catch (error: any) {
+            return error;
+        }
+    }
+
+    static async #executeScriptCode(code: string, values: any[]): Promise<unknown> {
+        try {
+            const fn = new foundry.utils.AsyncFunction("inputs", code);
+            return await fn(values);
+        } catch (error: any) {
+            return error;
+        }
     }
 
     get title(): string | null {
@@ -88,42 +135,59 @@ class ExecuteScriptActionNode extends BaseActionNode<
     }
 
     async _execute(): Promise<boolean> {
-        const values = await this.getCustomInputsValues("input");
-        const result = await (this.state === "macro" ? this.#executeMacro(values) : this.#executeScript(values));
+        const userInput = await this.getInputValue("user");
+        const user = userInput?.active ? userInput : game.user;
+        const isSelf = user.isSelf;
+
+        const executeArgs: ExecuteScriptQueryOptions = {
+            _type: "execute-script",
+            applicationKey: this.applicationKey,
+            code: this.state === "script" ? await this.getInputValue("script") : undefined,
+            uuid: this.state === "macro" ? await this.getInputValue("macro") : undefined,
+            values: isSelf ? await this.getCustomInputsValues("input") : await this.getCustomInputs("input"),
+        };
+
+        const result = isSelf
+            ? await ExecuteScriptActionNode.executeScript(executeArgs)
+            : await user.query(MODULE.path("user-query"), executeArgs);
 
         if (R.isBoolean(result)) {
             return result;
         }
 
-        const returnedValues = this.parseUserValues(result).map((x) => x?.value);
-        if (returnedValues.length) {
-            this.setCustomOutputValues("output", returnedValues);
+        if (R.isError(result)) {
+            MODULE.error(
+                `an error occured in the node "${this.type}" (${this.id}) of the trigger "${this.triggerPath}"`,
+                result,
+            );
+        } else {
+            const returnedValues = this.parseUserValues(result).map((x) => x?.value);
+
+            if (returnedValues.length) {
+                this.setCustomOutputValues("output", returnedValues);
+            }
         }
 
         return this.executeNext("out");
     }
-
-    async #executeMacro(values: any[]): Promise<unknown> {
-        const uuid = await this.getInputValue("macro");
-        const macro = await fromUuid(uuid);
-        if (!isScriptMacro(macro)) return;
-
-        return macro.execute({ inputs: values });
-    }
-
-    async #executeScript(values: any[]): Promise<unknown> {
-        const code = await this.getInputValue("script");
-
-        try {
-            const fn = new foundry.utils.AsyncFunction("inputs", code);
-            return await fn(values);
-        } catch (error: any) {
-            MODULE.error(
-                `an error occured in the node "${this.type}" (${this.id}) of the trigger "${this.triggerPath}"`,
-                error,
-            );
-        }
-    }
 }
 
+type Inputs = {
+    macro: MacroUUID;
+    script: string;
+    user?: User;
+};
+
+type ExecuteScriptArgs = {
+    code?: string;
+    uuid?: MacroUUID;
+    values: any[];
+};
+
+type ExecuteScriptQueryOptions = ExecuteScriptArgs & {
+    _type: "execute-script";
+    applicationKey: ApplicationKey;
+};
+
 export { ExecuteScriptActionNode };
+export type { ExecuteScriptQueryOptions };

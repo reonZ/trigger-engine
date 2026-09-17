@@ -4,6 +4,8 @@ import {
     AwaitInputActionNode,
     AwaitSelectActionNode,
     ConfirmDialogQueryOptions,
+    ExecuteScriptActionNode,
+    ExecuteScriptQueryOptions,
     InputDialogQueryOptions,
     QueryUserArgs,
     SelectDialogQueryOptions,
@@ -32,6 +34,9 @@ async function onUserQuery(data: UserQueryOptions) {
             const { applicationKey, args, eventName, userId } = data;
             return TriggerApplication.executeEvent(userId, applicationKey, eventName, args);
         }
+        case "execute-script": {
+            return ExecuteScriptActionNode.processExecuteScript(data);
+        }
         case "execute-trigger": {
             const { args, eventName, triggerPath, userId } = data;
             return TriggerApplication.executeTriggerEvent(userId, triggerPath, eventName, args);
@@ -43,6 +48,7 @@ type UserQueryOptions =
     | ConfirmDialogQueryOptions
     | CreateItemQueryOptions
     | ExecuteEventQueryOptions
+    | ExecuteScriptQueryOptions
     | ExecuteTriggerQueryOptions
     | InputDialogQueryOptions
     | SelectDialogQueryOptions;

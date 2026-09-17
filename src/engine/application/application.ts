@@ -44,7 +44,7 @@ import utils = foundry.utils;
 const APPLICATION_MODES = ["setting", "free"] as const;
 
 class TriggerApplication {
-    static #instances: Collection<string, TriggerApplication> = new Collection();
+    static #instances: Collection<ApplicationKey, TriggerApplication> = new Collection();
     static #moduleTriggersPrepared = false;
 
     #applicationId: string;
@@ -170,7 +170,7 @@ class TriggerApplication {
         return this.#instances;
     }
 
-    static getApplicationKey(moduleId: string, applicationId: string): string | undefined {
+    static getApplicationKey(moduleId: string, applicationId: string): ApplicationKey | undefined {
         if (
             !R.isString(moduleId) || //
             !R.isString(applicationId) ||
@@ -187,10 +187,10 @@ class TriggerApplication {
         options?: TriggerApplicationOptions,
     ): RegisteredApplication | undefined {
         const applicationKey = this.getApplicationKey(moduleId, applicationId);
-        if (!applicationKey || this.#instances.has(applicationKey)) return;
+        if (!applicationKey || this.instances.has(applicationKey)) return;
 
         const app = new TriggerApplication(moduleId, applicationId, options);
-        this.#instances.set(applicationKey, app);
+        this.instances.set(applicationKey, app);
 
         return {
             prepareTriggers: () => {
@@ -232,7 +232,7 @@ class TriggerApplication {
 
     static getApplication(moduleId: string, applicationId: string): TriggerApplication | undefined {
         const applicationKey = this.getApplicationKey(moduleId, applicationId);
-        return applicationKey ? this.#instances.get(applicationKey) : undefined;
+        return applicationKey ? this.instances.get(applicationKey) : undefined;
     }
 
     static registerTriggers(moduleId: string, applicationId: string, triggersOrFilePath: string | TriggerDataInput[]) {
@@ -257,12 +257,12 @@ class TriggerApplication {
     }
 
     static async prepareModulesTriggers(): Promise<void> {
-        await Promise.all(this.#instances.map((application) => application.prepareModuleTriggers()));
+        await Promise.all(this.instances.map((application) => application.prepareModuleTriggers()));
         TriggerApplication.#moduleTriggersPrepared = true;
     }
 
     static prepareApplications(): Promise<void[]> {
-        return Promise.all(this.#instances.map((application) => application.prepare()));
+        return Promise.all(this.instances.map((application) => application.prepare()));
     }
 
     static async executeEvent(

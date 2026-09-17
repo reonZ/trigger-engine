@@ -467,6 +467,9 @@
                             },
                             "script": {
                                 "title": "Script Code"
+                            },
+                            "user": {
+                                "tooltip": "If you want it executed in another <u>User</u> client"
                             }
                         },
                         "states": {
