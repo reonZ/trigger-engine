@@ -122,6 +122,10 @@ class ExecuteScriptActionNode extends BaseActionNode<"out", Inputs, never, "inpu
         return macro === null ? { unicode: "\uf127" } : (macro?.img ?? { unicode: "\uf121" });
     }
 
+    get canStop(): boolean {
+        return true;
+    }
+
     get localMacro(): CompendiumIndexData | undefined | null {
         if (this.state !== "macro") return;
 
@@ -135,8 +139,12 @@ class ExecuteScriptActionNode extends BaseActionNode<"out", Inputs, never, "inpu
     }
 
     async _execute(): Promise<boolean> {
-        const userInput = await this.getInputValue("user");
-        const user = userInput?.active ? userInput : game.user;
+        const user = (await this.getInputValue("user")) ?? game.user;
+
+        if (!user.active) {
+            return true;
+        }
+
         const isSelf = user.isSelf;
 
         const executeArgs: ExecuteScriptQueryOptions = {
