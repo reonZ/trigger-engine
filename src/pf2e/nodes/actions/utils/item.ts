@@ -75,8 +75,6 @@ async function createTargetsEmbeddedItem(targets: TargetDocuments[], source: Pre
     const activeGM = game.users.activeGM;
     if (!activeGM) return;
 
-    // const actors = targets.map(({ actor }) => actor);
-
     // we have rules to set still, so we redirect item creation to owners
     if (hasRulesToSet) {
         return Promise.all(

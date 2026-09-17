@@ -1,5 +1,12 @@
-#
+# 1.35.0
 
+- add new `TriggerNode#applicationKey` getter
+- add new `TriggerNode#canDelay` getter
+- add new `User` input to the `Execute Script` action node:
+  - allows the execution of a script/macro on a user client other than the one currently executing the trigger
+  - if the user isn't connected, the node will not be executed neither will the next node be
+  - the node will not preemptively check if the user can execute the macro the same way it isn't checking if the current one can
+- fix `delay` special icon localization
 - pf2e-trigger`:
   - fix create item nodes (e.g. `Create Item`, `Create Effect`, etc.) not redirecting to a GM if the current user isn't one
 
