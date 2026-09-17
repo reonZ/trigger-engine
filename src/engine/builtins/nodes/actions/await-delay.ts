@@ -59,12 +59,12 @@ class AwaitDelayActionNode extends BaseActionNode<"out" | "after", Inputs, Outpu
         return this.localize(this.state === "repeat" ? "alias.repeat.title" : "title") as string;
     }
 
-    get isLoop(): boolean {
-        return this.state === "repeat";
+    get canDelay(): boolean {
+        return true;
     }
 
-    get specialIcons(): { icon: IconObject; name?: string }[] {
-        return [{ icon: { unicode: "\uf017" }, name: "delay" }];
+    get isLoop(): boolean {
+        return this.state === "repeat";
     }
 
     get icon(): IconObject {

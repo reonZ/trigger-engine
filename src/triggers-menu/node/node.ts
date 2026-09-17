@@ -182,6 +182,10 @@ class BlueprintNode extends PIXI.Container {
         return this.#node.canBreak;
     }
 
+    get canDelay(): boolean {
+        return this.#node.canDelay;
+    }
+
     get canStop(): boolean {
         return this.#node.canStop;
     }
@@ -850,6 +854,7 @@ class BlueprintNode extends PIXI.Container {
             [this.isEmit, "emit", "\uf1eb"],
             [this.isLoop, "loop", "\uf0e2"],
             [this.canBreak, "break", "\uf256"],
+            [this.canDelay, "delay", "\uf017"],
             [this.canStop, "stop", "\uf127"],
         ] as const;
 
