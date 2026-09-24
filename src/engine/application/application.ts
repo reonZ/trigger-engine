@@ -851,7 +851,7 @@ function diffTriggers(data: TriggerData, source: TriggerDataInput): boolean {
 
         if (property === "tags") {
             const newValue = source.tags ?? [];
-            if (!arraysEqual(previousValue, newValue)) return true;
+            if (!arraysEqual(previousValue ?? [], newValue)) return true;
         } else if (property === "nodes") {
             const newValue = source.nodes ?? [];
             if (objectDifferentFrom(newValue, previousValue)) return true;
