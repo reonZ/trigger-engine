@@ -29,7 +29,8 @@ class RegionEvent<TOutputs extends RegionEventOutputs = RegionEventOutputs> exte
         return this.executeNext("out");
     }
 
-    _setOutputs({ attachment, eventName, region, target }: RegionEventOptions) {
+    _setOutputs({ attachment, eventName, region, target, user }: RegionEventOptions) {
+        this.userContext = user;
         this.setOutputValue("attachment", attachment);
         this.setOutputValue("event", eventName);
         this.setOutputValue("region", region);

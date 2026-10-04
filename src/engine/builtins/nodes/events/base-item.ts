@@ -24,11 +24,12 @@ abstract class BaseItemEvent extends BaseEventNode<Inputs, Outputs> {
         ];
     }
 
-    async _execute({ item, parent }: ItemEventOptions): Promise<boolean> {
+    async _execute({ item, parent, user }: ItemEventOptions): Promise<boolean> {
         const type = await this.getInputValue("type");
         const types = splitListString(type);
         if (types.length && !R.isIncludedIn(item.type, types)) return false;
 
+        this.userContext = user;
         this.setOutputValue("item", item);
         this.setOutputValue("parent", parent);
 

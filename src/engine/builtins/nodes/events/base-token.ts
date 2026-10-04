@@ -1,4 +1,4 @@
-import { BaseEventNode, BuiltinsOutputEntry } from "engine";
+import { BaseEventNode, BuiltinsOutputEntry, TokenEventOptions } from "engine";
 
 abstract class BaseTokenEvent extends BaseEventNode<never, { target: TargetDocuments }> {
     static get tags(): string[] {
@@ -9,8 +9,9 @@ abstract class BaseTokenEvent extends BaseEventNode<never, { target: TargetDocum
         return [{ key: "target", type: "target" }];
     }
 
-    async _execute(target: TargetDocuments): Promise<boolean> {
+    async _execute({ target, user }: TokenEventOptions): Promise<boolean> {
         this.sceneContext = target.token;
+        this.userContext = user;
         this.setOutputValue("target", target);
         return this.executeNext("out");
     }

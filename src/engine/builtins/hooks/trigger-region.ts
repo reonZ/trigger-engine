@@ -56,6 +56,7 @@ class TriggerEngineRegionBehaviorType extends foundry.data.regionBehaviors.Regio
             eventName: event.name,
             region,
             target,
+            user: event.user,
         };
     }
 }
@@ -65,6 +66,7 @@ type RegionEventOptions = {
     eventName: string;
     region: RegionDocument;
     target: TargetDocuments;
+    user: User;
 };
 
 export { RegionHook, TriggerEngineRegionBehaviorType };

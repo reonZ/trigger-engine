@@ -1,6 +1,5 @@
 import { IconObject } from "_zod";
-import { BaseEventNode } from "engine";
-import { START_EVENT_TYPE } from "engine/application";
+import { BaseEventNode, START_EVENT_TYPE } from "engine";
 
 class _StartEventNode extends BaseEventNode {
     static get type(): string {
