@@ -13,6 +13,7 @@ import {
     SYSTEM,
     SpellPF2e,
     TokenDocumentPF2e,
+    UserPF2e,
     createToggleHook,
     isActionMessage,
     isSpellMessage,
@@ -49,6 +50,7 @@ class CreateMessageHook extends TriggerHook<
     async #onCreateMessage(message: ChatMessagePF2e) {
         if (!game.user.isActiveGM) return;
 
+        const user = message.author ?? game.user;
         const { appliedDamage, origin, context } = message.flags[SYSTEM.id];
 
         if (isActionMessage(message)) {
@@ -67,11 +69,12 @@ class CreateMessageHook extends TriggerHook<
                 options: origin.rollOptions ?? [],
                 origin: originActor ? { actor: originActor } : undefined,
                 targets,
+                user,
             } satisfies ActionChatOptions);
         }
 
         if (isSpellMessage(message)) {
-            return onSpellCastMessage.call(this, message);
+            return onSpellCastMessage.call(this, message, user);
         }
 
         if (!context) return;
@@ -89,6 +92,7 @@ class CreateMessageHook extends TriggerHook<
                 origin: source,
                 outcome: context.outcome,
                 target,
+                user,
             } satisfies AttackRollOptions);
         }
 
@@ -112,17 +116,18 @@ class CreateMessageHook extends TriggerHook<
                 origin: originActor ? { actor: originActor } : undefined,
                 target,
                 types,
+                user,
             } satisfies DamageTakenOptions);
         }
 
         if (message.isCheckRoll) {
-            const checkData = await checkRollData(message);
+            const checkData = await checkRollData(user, message);
             return checkData && this.executeEvent("check-roll-event", checkData);
         }
     }
 }
 
-async function onSpellCastMessage(this: TriggerHook<SpellCastOptions>, message: ChatMessagePF2e) {
+async function onSpellCastMessage(this: TriggerHook<SpellCastOptions>, message: ChatMessagePF2e, user: UserPF2e) {
     const origin = message.flags[SYSTEM.id].origin;
     if (!origin || !messageHasCastSpellOption(message)) return;
 
@@ -136,6 +141,7 @@ async function onSpellCastMessage(this: TriggerHook<SpellCastOptions>, message: 
         options: origin.rollOptions ?? [],
         origin: originActor ? { actor: originActor } : undefined,
         targets,
+        user,
         variant: origin.variant,
     } satisfies SpellCastOptions);
 }
@@ -157,7 +163,11 @@ async function getMessageData(
     return { originActor, targets };
 }
 
-async function checkRollData(message: ChatMessagePF2e, reroll?: boolean): Promise<CheckRollOptions | undefined> {
+async function checkRollData(
+    user: UserPF2e,
+    message: ChatMessagePF2e,
+    reroll?: boolean,
+): Promise<CheckRollOptions | undefined> {
     const { context, origin } = message.flags[SYSTEM.id] as { context: CheckContextChatFlag; origin?: ItemOriginFlag };
     const roller = { actor: message.actor, token: message.token };
     if (!isValidTargetDocuments(roller)) return;
@@ -176,6 +186,7 @@ async function checkRollData(message: ChatMessagePF2e, reroll?: boolean): Promis
         roller,
         target: message.target ?? undefined,
         type: context.type,
+        user,
     };
 }
 
@@ -198,6 +209,7 @@ type BaseOptions = {
     options: string[];
     origin: TargetDocuments | undefined;
     target: TargetDocuments;
+    user: UserPF2e;
 };
 
 type ActionChatOptions = Omit<BaseOptions, "item" | "target"> & {

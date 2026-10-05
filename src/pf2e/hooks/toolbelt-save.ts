@@ -1,5 +1,5 @@
 import { TriggerHook } from "engine";
-import { ChatMessagePF2e, createToggleHook } from "foundry-helpers";
+import { createToggleHook } from "foundry-helpers";
 import { checkRollData } from ".";
 
 class ToolbeltSaveHook extends TriggerHook {
@@ -17,16 +17,8 @@ class ToolbeltSaveHook extends TriggerHook {
         this.#hook.disable();
     }
 
-    async #onToolbeltSave({
-        data,
-        message,
-        rollMessage,
-    }: {
-        data: toolbelt.targetHelper.TargetSaveInstance;
-        message: ChatMessagePF2e;
-        rollMessage?: ChatMessagePF2e;
-    }) {
-        const checkData = await checkRollData(rollMessage ?? message, !!data.rerolled);
+    async #onToolbeltSave({ data, message, rollMessage, user }: toolbelt.targetHelper.RollSaveHook) {
+        const checkData = await checkRollData(user, rollMessage ?? message, !!data.rerolled);
         if (checkData) {
             this.executeEvent("check-roll-event", checkData);
         }

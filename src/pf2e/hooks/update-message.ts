@@ -19,7 +19,8 @@ class UpdateMessageHook extends TriggerHook<SpellCastOptions> {
 
     async #onUpdateMessage(message: ChatMessagePF2e, changes: DeepPartial<ChatMessageSourcePF2e>) {
         if (isSpellMessage(message)) {
-            return changes.flags?.[SYSTEM.id]?.origin?.variant && onSpellCastMessage.call(this, message);
+            const user = message.author ?? game.user;
+            return changes.flags?.[SYSTEM.id]?.origin?.variant && onSpellCastMessage.call(this, message, user);
         }
     }
 }

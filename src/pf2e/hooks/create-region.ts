@@ -7,6 +7,7 @@ import {
     RegionDocumentPF2e,
     ScenePF2e,
     SYSTEM,
+    UserPF2e,
 } from "foundry-helpers";
 
 class CreateRegionHook extends TriggerHook<TemplatePlacedEventOptions> {
@@ -29,7 +30,8 @@ class CreateRegionHook extends TriggerHook<TemplatePlacedEventOptions> {
     }
 
     async #onCreateRegion(region: RegionDocumentPF2e, _context: any, userId: string) {
-        if (!canvas.scene || !region.isEffectArea || !game.user.isActiveGM) return;
+        const user = game.users.get(userId);
+        if (!user || !canvas.scene || !region.isEffectArea || !game.user.isActiveGM) return;
 
         const scene = region.object.scene;
         const flag = region.flags[SYSTEM.id].origin;
@@ -48,6 +50,7 @@ class CreateRegionHook extends TriggerHook<TemplatePlacedEventOptions> {
             origin,
             region,
             scene,
+            user,
         };
 
         this.executeEvent("template-placed-event", options);
@@ -61,6 +64,7 @@ type TemplatePlacedEventOptions = {
     origin: TargetDocuments;
     region: RegionDocumentPF2e;
     scene: ScenePF2e;
+    user: UserPF2e;
 };
 
 export { CreateRegionHook };

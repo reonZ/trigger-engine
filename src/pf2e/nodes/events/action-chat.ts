@@ -33,9 +33,11 @@ class ActionChatEvent extends BaseEventNode<Inputs, Outputs> {
         return { unicode: "\ue1e3", fontWeight: "900" };
     }
 
-    async _execute({ item, options, origin, targets }: ActionChatOptions): Promise<boolean> {
+    async _execute({ item, options, origin, targets, user }: ActionChatOptions): Promise<boolean> {
         const slug = await this.getInputValue("slug");
         if (slug && item.slug !== slug) return true;
+
+        this.userContext = user;
 
         this.setOutputValue("item", item);
         this.setOutputValue("options", options);

@@ -94,6 +94,7 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
         roller,
         target,
         type,
+        user,
     }: CheckRollOptions): Promise<boolean> {
         if (this.state === "check") {
             const when = await this.getInputValue("for");
@@ -101,6 +102,8 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
         } else {
             this.setOutputValue("type", type);
         }
+
+        this.userContext = user;
 
         this.setOutputValue("dc", dc);
         this.setOutputValue("item", item);

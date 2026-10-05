@@ -66,7 +66,7 @@ class DamageTakenEvent extends BaseEventNode<Inputs, Outputs, never, "select" | 
         return { unicode: "\ue4dc", fontWeight: "900" };
     }
 
-    async _execute({ item, options, origin, target, types }: DamageTakenOptions): Promise<boolean> {
+    async _execute({ item, options, origin, target, types, user }: DamageTakenOptions): Promise<boolean> {
         const requires = await this.getInputValue("requires");
         if (requires && !origin) return true;
 
@@ -76,6 +76,8 @@ class DamageTakenEvent extends BaseEventNode<Inputs, Outputs, never, "select" | 
             const when = await this.getInputValue("for");
             if (!R.isIncludedIn(when, types)) return true;
         }
+
+        this.userContext = user;
 
         this.setOutputValue("item", item);
         this.setOutputValue("options", options);

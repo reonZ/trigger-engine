@@ -26,8 +26,9 @@ class TemplatePlacedEvent extends BaseEventNode<never, Outputs> {
         return { unicode: "\uf867" };
     }
 
-    _execute({ attachment, item, options, origin, region, scene }: TemplatePlacedEventOptions): Promise<boolean> {
+    _execute({ attachment, item, options, origin, region, scene, user }: TemplatePlacedEventOptions): Promise<boolean> {
         this.sceneContext = scene;
+        this.userContext = user;
 
         this.setOutputValue("attachment", attachment);
         this.setOutputValue("item", item);

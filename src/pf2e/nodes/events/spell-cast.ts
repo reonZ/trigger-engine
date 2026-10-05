@@ -29,9 +29,11 @@ class SpellCastEvent extends BaseEventNode<Inputs, Outputs> {
         return { unicode: "\ue2ca", fontWeight: "900" };
     }
 
-    async _execute({ castRank, item, options, origin, targets }: SpellCastOptions): Promise<boolean> {
+    async _execute({ castRank, item, options, origin, targets, user }: SpellCastOptions): Promise<boolean> {
         const slug = await this.getInputValue("slug");
         if (slug && item.slug !== slug) return true;
+
+        this.userContext = user;
 
         this.setOutputValue("rank", castRank ?? item.rank);
         this.setOutputValue("item", item);
