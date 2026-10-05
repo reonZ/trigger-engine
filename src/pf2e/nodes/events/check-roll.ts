@@ -84,18 +84,10 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
         return { unicode: "\uf6cf", fontWeight: "900" };
     }
 
-    async _execute({
-        dc,
-        isReroll,
-        item,
-        options,
-        origin,
-        outcome,
-        roller,
-        target,
-        type,
-        user,
-    }: CheckRollOptions): Promise<boolean> {
+    async _execute(rollOptions: Record<string, any>): Promise<boolean> {
+        const { dc, isReroll, item, options, origin, outcome, roller, target, type, user } =
+            (await this.convertObjectFromEmitable(rollOptions)) as CheckRollOptions;
+
         if (this.state === "check") {
             const when = await this.getInputValue("for");
             if (when !== type) return true;

@@ -9,6 +9,10 @@ class ToolbeltSaveHook extends TriggerHook {
         return ["check-roll-event"];
     }
 
+    get gmOnly(): boolean {
+        return false;
+    }
+
     _enable() {
         this.#hook.activate();
     }
@@ -19,8 +23,20 @@ class ToolbeltSaveHook extends TriggerHook {
 
     async #onToolbeltSave({ data, message, rollMessage, user }: toolbelt.targetHelper.RollSaveHook) {
         const checkData = await checkRollData(user, rollMessage ?? message, !!data.rerolled);
-        if (checkData) {
+        if (!checkData) return;
+
+        if (game.user.isGM) {
             this.executeEvent("check-roll-event", checkData);
+        } else {
+            const converted = this.convertObjectToEmitable(checkData, {
+                item: "item",
+                origin: "target",
+                roller: "target",
+                target: "target",
+                user: "user",
+            });
+
+            this.executeEventAsGM("check-roll-event", converted);
         }
     }
 }

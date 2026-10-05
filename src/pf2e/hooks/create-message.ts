@@ -224,9 +224,10 @@ type SpellCastOptions = Omit<BaseOptions, "item" | "target"> & {
     variant: { overlays: string[] } | null | undefined;
 };
 
-type AttackRollOptions = WithRequired<BaseOptions, "origin"> & {
+type AttackRollOptions = Omit<BaseOptions, "origin"> & {
     action: string;
     isReroll: boolean;
+    origin: TargetDocuments;
     outcome: DegreeOfSuccessString | null;
 };
 
@@ -234,11 +235,12 @@ type DamageTakenOptions = BaseOptions & {
     types: DamageTakenType[];
 };
 
-type CheckRollOptions = WithPartial<BaseOptions, "target"> & {
+type CheckRollOptions = Omit<BaseOptions, "target"> & {
     dc: number | undefined;
     isReroll: boolean;
     outcome: DegreeOfSuccessString | null;
     roller: TargetDocuments;
+    target: TargetDocuments | undefined;
     type: CheckType;
 };
 
