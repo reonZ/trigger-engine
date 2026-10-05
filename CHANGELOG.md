@@ -1,3 +1,18 @@
+# 1.36.0
+
+- the `TriggerApplication#convertObjectToEmitable` now embeds the conversion arguments in the resulting object
+  - the `TriggerApplication#convertObjectFromEmitable` reuse them directly to convert back
+  - if they are not present when calling `convertObjectFromEmitable`, the object is returned as is
+- add new `Embedded Item Updated` event node
+  - you can use the `Update Paths` output to filter out which type of changes you want to trigger on
+- the following events now set `userContext` to be the user at the origin of the "action" that triggered the event:
+  - `Item Added to Actor`, `Item Removed from Actor`, `Embedded Item Updated`, `On Hook Called`, `Region Triggered`, `Token Created`, `Token Moved` & `Token Removed`
+- the `Console Log` action node now logs the `sceneContext` and `userContext` every time it is executed
+- `pf2e-trigger`:
+  - the following events now set `userContext` to be the user at the origin of the "action" that triggered the event:
+    - `Action Used`, `Attack Rolled`, `Check Rolled`, `Damage Taken`, `Spell Cast` & `Template Placed`
+  - fix save rolls/rerolls coming from the `PF2e Toolbelt` module's `Target Helper` executing triggers on user clients that aren't GMs
+
 # 1.35.1
 
 - add an extra safeguard when diff-checking tags during trigger preparation
