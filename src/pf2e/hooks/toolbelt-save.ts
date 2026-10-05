@@ -21,8 +21,8 @@ class ToolbeltSaveHook extends TriggerHook {
         this.#hook.disable();
     }
 
-    async #onToolbeltSave({ data, message, rollMessage, user }: toolbelt.targetHelper.RollSaveHook) {
-        const checkData = await checkRollData(user, rollMessage ?? message, !!data.rerolled);
+    async #onToolbeltSave({ data, message, rollMessage }: toolbelt.targetHelper.RollSaveHook) {
+        const checkData = await checkRollData(game.user, rollMessage ?? message, !!data.rerolled);
         if (!checkData) return;
 
         if (game.user.isGM) {
