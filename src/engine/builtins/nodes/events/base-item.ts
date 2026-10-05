@@ -1,7 +1,10 @@
 import { BaseEventNode, BuiltinsInputEntry, BuiltinsOutputEntry, ItemEventOptions } from "engine";
 import { localize, R, splitListString } from "foundry-helpers";
 
-abstract class BaseItemEvent extends BaseEventNode<Inputs, Outputs> {
+abstract class BaseItemEvent<TOutputs extends ItemEventOptions = ItemEventOptions> extends BaseEventNode<
+    Inputs,
+    TOutputs
+> {
     static get tags(): string[] {
         return ["item"];
     }
@@ -24,7 +27,7 @@ abstract class BaseItemEvent extends BaseEventNode<Inputs, Outputs> {
         ];
     }
 
-    async _execute({ item, parent, user }: ItemEventOptions): Promise<boolean> {
+    async _execute({ args, item, parent, user }: ItemEventOptions): Promise<boolean> {
         const type = await this.getInputValue("type");
         const types = splitListString(type);
         if (types.length && !R.isIncludedIn(item.type, types)) return false;
@@ -33,14 +36,18 @@ abstract class BaseItemEvent extends BaseEventNode<Inputs, Outputs> {
         this.setOutputValue("item", item);
         this.setOutputValue("parent", parent);
 
+        await this._processExecute?.(args);
+
         return this.executeNext("out");
     }
+}
+
+interface BaseItemEvent {
+    _processExecute(args: any[]): Promise<void>;
 }
 
 type Inputs = {
     type: string;
 };
-
-type Outputs = ItemEventOptions;
 
 export { BaseItemEvent };

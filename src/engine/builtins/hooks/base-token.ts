@@ -3,9 +3,10 @@ import { BaseSingleHook } from ".";
 
 abstract class BaseTokenHook extends BaseSingleHook<TokenEventOptions> {
     _onEvent(token: TokenDocumentPF2e, _context: object, userId: string): void {
-        const actor = token.actor;
         const user = game.users.get(userId);
         if (!user) return;
+
+        const actor = token.actor;
 
         if (this.isValidActor(actor)) {
             this.executeEvent(this.events[0], { target: { actor, token }, user });

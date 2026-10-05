@@ -604,6 +604,15 @@
                     },
                     "test-event": {
                         "title": "Test Event"
+                    },
+                    "update-item-event": {
+                        "outputs": {
+                            "paths": {
+                                "title": "Update Paths",
+                                "tooltip": "Flattened data paths that were updated"
+                            }
+                        },
+                        "title": "Embedded Item Updated"
                     }
                 },
                 "extractor": {

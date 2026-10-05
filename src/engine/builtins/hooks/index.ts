@@ -10,6 +10,7 @@ import {
     MoveTokenHook,
     RegionHook,
     TestHook,
+    UpdateItemHook,
 } from ".";
 
 export * from "./base-single-hook";
@@ -27,6 +28,7 @@ export * from "./hook-called";
 export * from "./move-token";
 export * from "./trigger-region";
 export * from "./test-hook";
+export * from "./update-item";
 
 export default [
     CreateCombatantHook,
@@ -40,4 +42,5 @@ export default [
     MoveTokenHook,
     RegionHook,
     TestHook,
+    UpdateItemHook,
 ] as const;

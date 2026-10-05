@@ -10,6 +10,7 @@ import {
     MoveTokenEvent,
     RegionEvent,
     TestEvent,
+    UpdateItemEvent,
 } from ".";
 
 export * from "./base";
@@ -28,6 +29,7 @@ export * from "./move-token";
 export * from "./region-event";
 export * from "./start-event";
 export * from "./test-event";
+export * from "./update-item";
 
 export default [
     CreateCombatantEvent,
@@ -41,4 +43,5 @@ export default [
     MoveTokenEvent,
     RegionEvent,
     TestEvent,
+    UpdateItemEvent,
 ] as const;
