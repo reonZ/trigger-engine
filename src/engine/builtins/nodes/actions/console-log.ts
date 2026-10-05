@@ -28,6 +28,8 @@ class ConsoleLogActionNode extends BaseActionNode<"out", never, never, "input"> 
         const values = await this.getCustomInputs("input");
 
         MODULE.group(this.nodePath);
+        MODULE.log(`sceneContext`, this.sceneContext);
+        MODULE.log(`userContext`, this.userContext);
         for (const { label, value } of values) {
             MODULE.log(`${label}:`, value);
         }
