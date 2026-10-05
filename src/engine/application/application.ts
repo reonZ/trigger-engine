@@ -545,10 +545,13 @@ class TriggerApplication {
     convertObjectToEmitable<T extends string>(
         obj: Record<T, unknown>,
         conversionTypes: PartialRecord<T, string>,
-        userValueEntries: Partial<T>[],
+        userValueEntries: Partial<T>[] = [],
         parseUserValues?: boolean,
     ): Record<T, unknown> {
-        const returnedObj = {} as Record<T, unknown>;
+        const returnedObj = {
+            __conversionTypes: foundry.utils.deepClone(conversionTypes),
+            __userValueEntries: userValueEntries.slice(),
+        } as Record<T, unknown>;
 
         for (const [key, entry] of R.entries(obj)) {
             const type = conversionTypes[key];
@@ -593,13 +596,17 @@ class TriggerApplication {
 
     async convertObjectFromEmitable<T extends string>(
         obj: Record<T, unknown>,
-        conversionTypes: PartialRecord<T, string>,
-        userValueEntries: Partial<T>[],
         withType?: boolean,
     ): Promise<Record<T, unknown>> {
-        const returnedObj = {} as Record<T, unknown>;
+        if (!("__conversionTypes" in obj) || !("__userValueEntries" in obj)) return obj;
 
-        for (const [key, entry] of R.entries(obj)) {
+        const returnedObj = {} as Record<T, unknown>;
+        const conversionTypes = (obj as { __conversionTypes: PartialRecord<T, string> }).__conversionTypes;
+        const userValueEntries = (obj as { __userValueEntries: Partial<T>[] }).__userValueEntries;
+
+        for (const [key, entry] of R.entries(obj as Record<T, unknown>)) {
+            if (["__conversionTypes", "__userValueEntries"].includes(key)) continue;
+
             const type = conversionTypes[key];
 
             if (type) {

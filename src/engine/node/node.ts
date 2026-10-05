@@ -618,13 +618,8 @@ class TriggerNode<
      * @see {@link TriggerNode#convertValueFromEmitable}
      * @see {@link TriggerNode#convertValuesFromEmitable}
      */
-    convertObjectFromEmitable<T extends string>(
-        obj: Record<T, unknown>,
-        conversionTypes: PartialRecord<T, string>,
-        userValueEntries: Partial<T>[],
-        withType?: boolean,
-    ): Promise<Record<T, any>> {
-        return this.#parent.application.convertObjectFromEmitable(obj, conversionTypes, userValueEntries, withType);
+    convertObjectFromEmitable<T extends string>(obj: Record<T, unknown>, withType?: boolean): Promise<Record<T, any>> {
+        return this.#parent.application.convertObjectFromEmitable(obj, withType);
     }
 
     /**

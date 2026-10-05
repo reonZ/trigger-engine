@@ -62,7 +62,7 @@ interface TriggerHook<TArgs extends Record<string, any> = Record<string, any>> {
     convertObjectToEmitable<T extends string>(
         obj: Record<T, unknown>,
         conversionTypes: PartialRecord<T, string>,
-        userValueEntries: Partial<T>[],
+        userValueEntries?: Partial<T>[],
         parseUserValues?: boolean,
     ): Record<T, unknown>;
 
