@@ -14,7 +14,7 @@ import { id } from "../module.json";
 
 MODULE.register(id);
 
-Hooks.once("init", async () => {
+Hooks.once("init", () => {
     registerSetting("stretched", {
         type: Boolean,
         default: false,
@@ -50,18 +50,16 @@ Hooks.once("init", async () => {
 
     // we allow third party to register triggers for an existing application
     Hooks.callAll("triggerEngine.registerTriggers", TriggerApplication.registerTriggers.bind(TriggerApplication));
-});
 
-Hooks.once("ready", async () => {
     const regionPath = MODULE.path("builtins.region");
-
     // we have a different region behavior for pf2e system
     CONFIG.RegionBehavior.dataModels[regionPath] = SYSTEM.isPathfinder
         ? PF2eTriggerEngineRegionBehaviorType
         : TriggerEngineRegionBehaviorType;
-
     CONFIG.RegionBehavior.typeIcons[regionPath] = "fa-solid fa-land-mine-on";
+});
 
+Hooks.once("ready", async () => {
     // we prepare the module triggers
     await TriggerApplication.prepareModulesTriggers();
     // we prepare all the applications once foundry is ready
