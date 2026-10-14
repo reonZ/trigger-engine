@@ -29,7 +29,7 @@ class TriggerEngineRegionBehaviorType extends foundry.data.regionBehaviors.Regio
                 nullable: false,
                 trim: true,
                 initial: "",
-                label: localize("builtins.region.path"),
+                label: localize.path("builtins.region.path"),
                 validate: (value) => R.isString(value) && R.split(value, ":").length === 3,
             }),
         };
