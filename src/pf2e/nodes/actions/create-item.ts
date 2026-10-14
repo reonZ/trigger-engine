@@ -9,6 +9,7 @@ import {
     doubleUuidSchemas,
     getDoubleUuidValue,
     getIconFromDoubleUuid,
+    getItemTargets,
     getLocalItemFromSourceUuid,
     selectChoiceSets,
 } from "..";
@@ -91,7 +92,7 @@ class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never
     }
 
     async #getTargets(item: ItemPF2e, uuid: string) {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, item.type as ItemType);
         const duplicates = await this.getInputValue("duplicate");
         const maxTakable = !duplicates ? 1 : item.isOfType("feat") ? item.maxTakable : Infinity;
 

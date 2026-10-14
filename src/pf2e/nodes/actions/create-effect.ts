@@ -8,6 +8,7 @@ import {
     durationStates,
     effectSchemas,
     getEffectData,
+    getItemTargets,
 } from ".";
 import { PF2eInputEntry } from "pf2e";
 
@@ -63,7 +64,7 @@ class CreateEffectActionNode extends BaseActionNode<"out", Inputs, never, "rule"
     }
 
     async _execute(): Promise<boolean> {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, "effect");
 
         if (!targets.length) {
             return this.executeNext("out");

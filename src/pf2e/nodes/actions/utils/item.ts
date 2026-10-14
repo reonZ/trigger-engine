@@ -2,6 +2,7 @@ import { BaseActionNode, CustomInputSchema } from "engine";
 import {
     ChoiceSetSource,
     ItemSourcePF2e,
+    ItemType,
     localize,
     MODULE,
     primaryPlayerOwner,
@@ -20,6 +21,15 @@ function choiceSetCustomInput(): CustomInputSchema {
         label: localize("pf2e-trigger.shared.item.choiceset.label"),
         tooltip: localize("pf2e-trigger.shared.item.choiceset.tooltip"),
     };
+}
+
+async function getItemTargets(this: BaseActionNode<any, { target: TargetDocuments[] }>, type: ItemType) {
+    const targets = await this.getInputValue("target");
+    return filterTargetsBytItemType(targets, type);
+}
+
+function filterTargetsBytItemType(targets: TargetDocuments[], type: ItemType): TargetDocuments[] {
+    return targets.filter(({ actor }) => actor.allowedItemTypes.includes(type));
 }
 
 async function selectChoiceSets(this: BaseActionNode<any, any, any, "choices">, source: ItemSourcePF2e) {
@@ -110,4 +120,11 @@ type TokenMarkSource = RuleElementSource & {
     uuid?: TokenDocumentUUID;
 };
 
-export { choiceSetCustomInput, createTargetsEmbeddedItem, selectChoiceSets, selectTokenMarks };
+export {
+    choiceSetCustomInput,
+    createTargetsEmbeddedItem,
+    filterTargetsBytItemType,
+    getItemTargets,
+    selectChoiceSets,
+    selectTokenMarks,
+};

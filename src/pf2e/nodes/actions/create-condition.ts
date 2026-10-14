@@ -11,6 +11,7 @@ import {
     durationStates,
     effectSchemas,
     getEffectData,
+    getItemTargets,
 } from ".";
 
 class CreateConditionActionNode extends BaseActionNode<"out", Inputs, never, never, never, DurationState> {
@@ -35,7 +36,7 @@ class CreateConditionActionNode extends BaseActionNode<"out", Inputs, never, nev
     }
 
     async _execute(): Promise<boolean> {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, "condition");
 
         if (!targets.length) {
             return this.executeNext("out");

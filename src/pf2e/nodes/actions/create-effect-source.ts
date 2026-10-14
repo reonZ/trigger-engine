@@ -7,6 +7,7 @@ import {
     CreateItemActionNode,
     CreateItemInputs,
     createTargetsEmbeddedItem,
+    getItemTargets,
     selectChoiceSets,
     selectTokenMarks,
 } from ".";
@@ -43,7 +44,7 @@ class CreateEffectSourceActionNode extends BaseActionNode<"out", Inputs, never, 
     }
 
     async _execute(): Promise<boolean> {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, "effect");
 
         if (!targets.length) {
             return this.executeNext("out");

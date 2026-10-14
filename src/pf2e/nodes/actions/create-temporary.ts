@@ -2,7 +2,14 @@ import { IconObject } from "_zod";
 import { BaseActionNode } from "engine";
 import { createCustomEffect } from "foundry-helpers";
 import { getTriggerEffectData, PF2eInputEntry } from "pf2e";
-import { DurationState, createTargetsEmbeddedItem, durationSchemas, durationStates, getDurationData } from ".";
+import {
+    DurationState,
+    createTargetsEmbeddedItem,
+    durationSchemas,
+    durationStates,
+    getDurationData,
+    getItemTargets,
+} from ".";
 
 class CreateTemporaryActionNode extends BaseActionNode<"out", Inputs, never, never, never, DurationState> {
     static get type(): "create-temporary" {
@@ -30,7 +37,7 @@ class CreateTemporaryActionNode extends BaseActionNode<"out", Inputs, never, nev
     }
 
     async _execute(): Promise<boolean> {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, "effect");
 
         if (!targets.length) {
             return this.executeNext("out");

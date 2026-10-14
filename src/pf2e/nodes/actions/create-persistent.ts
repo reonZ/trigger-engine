@@ -1,7 +1,7 @@
 import { IconObject } from "_zod";
 import { BaseActionNode } from "engine";
 import { DamageType, recordToSelectOptions } from "foundry-helpers";
-import { createTargetsEmbeddedItem, PF2eInputEntry } from "pf2e";
+import { createTargetsEmbeddedItem, getItemTargets, PF2eInputEntry } from "pf2e";
 
 class CreatePersistentActionNode extends BaseActionNode<"out", Inputs> {
     static get type(): "create-persistent" {
@@ -44,7 +44,7 @@ class CreatePersistentActionNode extends BaseActionNode<"out", Inputs> {
     }
 
     async _execute(): Promise<boolean> {
-        const targets = await this.getInputValue("target");
+        const targets = await getItemTargets.call(this, "condition");
 
         if (!targets.length) {
             return this.executeNext("out");
