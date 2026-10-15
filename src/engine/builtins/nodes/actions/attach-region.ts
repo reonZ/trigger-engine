@@ -28,8 +28,8 @@ class AttachRegionActionNode extends BaseActionNode<"out", Inputs, never, never,
         return { unicode: "\uf3c5", fontWeight: "900" };
     }
 
-    get title(): string {
-        return this.localize(this.state === "detach" ? "detach" : "title") as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "detach" ? "detach" : "title");
     }
 
     async _execute(): Promise<boolean> {

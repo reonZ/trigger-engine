@@ -46,11 +46,11 @@ class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never
         return [choiceSetCustomInput()];
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         return getLocalItemFromSourceUuid.call(this)?.name ?? super.title;
     }
 
-    get subtitle(): string | null {
+    get subtitle(): Maybe<string> {
         return getLocalItemFromSourceUuid.call(this) ? super.title : super.subtitle;
     }
 

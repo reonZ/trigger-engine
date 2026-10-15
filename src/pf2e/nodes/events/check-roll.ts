@@ -71,7 +71,7 @@ class CheckRollEvent extends BaseEventNode<Inputs, Outputs, never, "all" | "chec
         ];
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         if (this.state === "all") {
             return super.title;
         }

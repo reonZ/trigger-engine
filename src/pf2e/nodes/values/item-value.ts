@@ -27,7 +27,7 @@ class ItemValueNode extends BaseValueNode<ItemPF2e | undefined, DoubleUuidInputs
         return [{ key: "item", type: "item" }];
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         return getLocalItemFromSourceUuid.call(this)?.name ?? super.title;
     }
 

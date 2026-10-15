@@ -46,8 +46,8 @@ class CreateBehaviorActionNode<
         return { unicode: "\ue59d", fontWeight: "900" };
     }
 
-    get subtitle(): string | null {
-        return this.state === "source" ? super.subtitle : (this.localize(`states.${this.state}`) as string);
+    get subtitle(): Maybe<string> {
+        return this.state === "source" ? super.subtitle : this.localize(`states.${this.state}`);
     }
 
     async _execute(): Promise<boolean> {

@@ -23,11 +23,9 @@ class UpdateResourceActionNode extends BaseActionNode<"out", Inputs> {
         ];
     }
 
-    get title(): string {
+    get title(): Maybe<string> {
         const value = this.getLocalValue("by");
-        return this.localize(
-            value > 0 ? "alias.increase.title" : value < 0 ? "alias.decrease.title" : "title",
-        ) as string;
+        return this.localize(value > 0 ? "alias.increase.title" : value < 0 ? "alias.decrease.title" : "title");
     }
 
     get icon(): IconObject {

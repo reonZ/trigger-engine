@@ -31,8 +31,8 @@ class UserTargetsActionNode extends BaseActionNode<"out", Inputs, Outputs, never
         ];
     }
 
-    get title(): string {
-        return this.localize(this.state === "only" ? "alias.only.title" : "title") as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "only" ? "alias.only.title" : "title");
     }
 
     get icon(): IconObject {

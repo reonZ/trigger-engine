@@ -66,8 +66,8 @@ class FilterTargetsExtractorNode extends BaseExtractorNode<Inputs, Outputs, "inp
         return this.state === "loop";
     }
 
-    get title(): string {
-        return this.localize(this.state === "filter" ? "title" : `alias.${this.state}.title`) as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "filter" ? "title" : `alias.${this.state}.title`);
     }
 
     async _execute(): Promise<boolean> {

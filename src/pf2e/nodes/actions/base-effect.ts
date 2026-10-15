@@ -51,18 +51,16 @@ abstract class BaseEffectActionNode<
         return ["effect"] as TEffectType[];
     }
 
-    get dynamicTitle(): string | null {
+    get dynamicTitle(): Maybe<string> {
         const value = this.getLocalValue("by");
-        return this.localize(
-            value > 0 ? "alias.increase.title" : value < 0 ? "alias.decrease.title" : "title",
-        ) as string;
+        return this.localize(value > 0 ? "alias.increase.title" : value < 0 ? "alias.decrease.title" : "title");
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         return getLocalItemFromSourceUuid.call(this)?.name ?? this.dynamicTitle;
     }
 
-    get subtitle(): string | null {
+    get subtitle(): Maybe<string> {
         return getLocalItemFromSourceUuid.call(this) ? this.dynamicTitle : super.subtitle;
     }
 

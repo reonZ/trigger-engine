@@ -16,7 +16,7 @@ abstract class BaseExtractorNode<
         return "#86910d";
     }
 
-    get subtitle(): string | null {
+    get subtitle(): Maybe<string> {
         return null;
     }
 }

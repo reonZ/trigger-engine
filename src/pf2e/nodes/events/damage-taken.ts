@@ -58,8 +58,8 @@ class DamageTakenEvent extends BaseEventNode<Inputs, Outputs, never, "select" | 
         ];
     }
 
-    get title(): string {
-        return this.localize(this.state === "everything" ? "alias.everything.title" : "title") as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "everything" ? "alias.everything.title" : "title");
     }
 
     get icon(): IconObject {

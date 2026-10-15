@@ -52,8 +52,8 @@ class UpdateInitiativeActionNode extends BaseActionNode<
         return [{ key: "value", type: "number" }];
     }
 
-    get title(): string {
-        return this.localize(this.state === "value" ? "title" : `alias.${this.state}.title`) as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "value" ? "title" : `alias.${this.state}.title`);
     }
 
     get icon(): IconObject {

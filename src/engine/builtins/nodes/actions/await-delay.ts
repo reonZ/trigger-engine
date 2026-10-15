@@ -55,8 +55,8 @@ class AwaitDelayActionNode extends BaseActionNode<"out" | "after", Inputs, Outpu
         return [{ key: "index", type: "number", state: "repeat" }];
     }
 
-    get title(): string {
-        return this.localize(this.state === "repeat" ? "alias.repeat.title" : "title") as string;
+    get title(): Maybe<string> {
+        return this.localize(this.state === "repeat" ? "alias.repeat.title" : "title");
     }
 
     get canDelay(): boolean {

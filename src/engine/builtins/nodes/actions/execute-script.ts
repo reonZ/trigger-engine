@@ -109,11 +109,11 @@ class ExecuteScriptActionNode extends BaseActionNode<"out", Inputs, never, "inpu
         }
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         return this.localMacro?.name ?? super.title;
     }
 
-    get subtitle(): string | null {
+    get subtitle(): Maybe<string> {
         return this.localMacro ? super.title : super.subtitle;
     }
 

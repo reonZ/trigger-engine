@@ -37,6 +37,10 @@ class ExecuteAnimationActionNode extends BaseActionNode<"out", Inputs, never, "i
         return { unicode: "\uf03d" };
     }
 
+    get module(): Maybe<string> {
+        return this.localize("module");
+    }
+
     async _execute(): Promise<boolean> {
         if (!R.isFunction(triggerAnimations?.api?.runFromTrigger)) {
             return this.executeNext("out");

@@ -378,6 +378,11 @@ class TriggerNode<
         return false;
     }
 
+    /** Used to display a special icon. */
+    get module(): Maybe<string> {
+        return null;
+    }
+
     /**
      * Icons added to the node to indicate some special features the node contains at first glance.
      * They will be added next to the already existing ones (e.g. `custom`)
@@ -395,8 +400,8 @@ class TriggerNode<
      * Localization path:
      * `<module-id>.<application-id>.node.<category>.<type>.subtitle`
      */
-    get subtitle(): string | null {
-        return this.localize("subtitle") ?? this.rootLocalize("category", this.category, "title") ?? null;
+    get subtitle(): Maybe<string> {
+        return this.localize("subtitle") ?? this.rootLocalize("category", this.category, "title");
     }
 
     /**
@@ -405,8 +410,8 @@ class TriggerNode<
      * Localization path:
      * `<module-id>.<application-id>.node.<category>.<type>.title`
      */
-    get title(): string | null {
-        return this.localize("title") ?? null;
+    get title(): Maybe<string> {
+        return this.localize("title");
     }
 
     /**
@@ -415,8 +420,8 @@ class TriggerNode<
      * Localization path:
      * `<module-id>.<application-id>.node.<category>.<type>.tooltip`
      */
-    generateTooltip(): string {
-        return this.localize("tooltip") ?? "";
+    generateTooltip(): Maybe<string> {
+        return this.localize("tooltip");
     }
 
     /**

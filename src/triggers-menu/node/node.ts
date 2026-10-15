@@ -206,7 +206,7 @@ class BlueprintNode extends PIXI.Container {
         return !this.isEvent && !this.isGate && !this.isVariable;
     }
 
-    get title(): string | null {
+    get title(): Maybe<string> {
         return this.#node.exitGate?.data.custom.title ?? this.#node.data.custom.title ?? this.#node.title;
     }
 
@@ -840,11 +840,19 @@ class BlueprintNode extends PIXI.Container {
             R.filter(R.isTruthy),
         );
 
-        const tooltip = this.#node.generateTooltip().trim();
-        if (tooltip) {
+        const moduleTooltip = this.#node.module?.trim();
+        if (moduleTooltip) {
+            specials.unshift({
+                icon: { unicode: "\uf12e", fontWeight: "900", fontMult: 1 },
+                name: moduleTooltip,
+            });
+        }
+
+        const nodeTooltip = this.#node.generateTooltip()?.trim();
+        if (nodeTooltip) {
             specials.unshift({
                 icon: { unicode: "\uf129", fontWeight: "900", fontMult: 1.1 },
-                name: tooltip,
+                name: nodeTooltip,
             });
         }
 

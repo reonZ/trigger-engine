@@ -24,9 +24,9 @@ class ActionChatEvent extends BaseEventNode<Inputs, Outputs> {
         ];
     }
 
-    get title(): string {
+    get title(): Maybe<string> {
         const key = game.toolbelt?.getToolSetting("actionable", "actionable") ? "title" : "titles.regular";
-        return this.localize(key) as string;
+        return this.localize(key);
     }
 
     get icon(): IconObject {
