@@ -31,7 +31,7 @@ class ItemValueNode extends BaseValueNode<ItemPF2e | undefined, DoubleUuidInputs
         return getLocalItemFromSourceUuid.call(this)?.name ?? super.title;
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return getIconFromDoubleUuid.call(this, null);
     }
 

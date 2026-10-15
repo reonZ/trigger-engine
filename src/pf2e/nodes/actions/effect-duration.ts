@@ -10,7 +10,7 @@ class EffectDurationActionNode extends BaseEffectActionNode<{ delete: boolean }>
         return [{ key: "delete", type: "boolean" }];
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return getIconFromDoubleUuid.call(this, { unicode: "\ue29e" });
     }
 

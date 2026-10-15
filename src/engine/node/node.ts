@@ -349,7 +349,7 @@ class TriggerNode<
      *
      * Return a string if an image.
      */
-    get icon(): string | IconObject | null {
+    get icon(): Maybe<string | IconObject> {
         return null;
     }
 
@@ -896,13 +896,13 @@ class TriggerNode<
      * If the 'target' entry doesn't have a declare 'token', then the function
      * will try to retrieve the first active token on the scene (with options)
      *
-     * @param {TargetDocuments} target
+     * @param {FoundryTargetDocuments} target
      * @param {object} [options]
      * @param {boolean} [options.linked]
      * @param {Scene | null} [options.scene]
      */
     getTargetToken<T extends TokenDocument>(
-        target: Maybe<TargetDocuments>,
+        target: Maybe<BaseTargetDocuments>,
         options?: FirstActiveTokenOptions,
     ): T | undefined {
         return getTargetToken(target, options) as T | undefined;
@@ -913,13 +913,18 @@ class TriggerNode<
      *
      * @see {@link TriggerNode#getTargetToken}
      */
-    getTargetsTokens(targets: TargetDocuments[], uuid: true, options?: FirstActiveTokenOptions): TokenDocumentUUID[];
-    getTargetsTokens<T extends TokenDocument>(
-        targets: TargetDocuments[],
-        uuid?: boolean,
+    getTargetsTokens(
+        targets: BaseTargetDocuments[],
+        uuid: true,
         options?: FirstActiveTokenOptions,
-    ): T[] {
-        return getTargetsTokens(targets, uuid, options) as unknown as T[];
+    ): TokenDocumentUUID[];
+    getTargetsTokens<T extends TokenDocument>(
+        targets: BaseTargetDocuments[],
+        uuid?: false,
+        options?: FirstActiveTokenOptions,
+    ): T[];
+    getTargetsTokens(targets: BaseTargetDocuments[], uuid?: boolean, options?: FirstActiveTokenOptions) {
+        return getTargetsTokens(targets, uuid, options) as TokenDocumentUUID[] | TokenDocument[];
     }
 
     /**

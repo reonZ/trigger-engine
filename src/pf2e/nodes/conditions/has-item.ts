@@ -27,7 +27,7 @@ class HasItemConditionNode extends BaseHasItemConditionNode<Inputs> {
         return getLocalItemFromSourceUuid.call(this) ? super.title : super.subtitle;
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return getIconFromDoubleUuid.call(this, super.icon);
     }
 

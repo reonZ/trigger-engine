@@ -1,7 +1,7 @@
 import { IconObject } from "_zod";
 import { BaseEffectActionNode, getIconFromDoubleUuid } from "pf2e";
 
-class EffectBadgeActionNode extends BaseEffectActionNode<"condition" | "effect"> {
+class EffectBadgeActionNode extends BaseEffectActionNode<Record<string, any>, "condition" | "effect"> {
     static get type(): "effect-badge" {
         return "effect-badge";
     }
@@ -14,7 +14,7 @@ class EffectBadgeActionNode extends BaseEffectActionNode<"condition" | "effect">
         return ["condition", "effect"];
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return getIconFromDoubleUuid.call(this, { unicode: "\uf559", fontWeight: "900" });
     }
 

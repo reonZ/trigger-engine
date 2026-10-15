@@ -33,7 +33,7 @@ class BaseConditionNode<
         return "#188600";
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return { unicode: "\ue14f" };
     }
 

@@ -54,7 +54,7 @@ class CreateItemActionNode extends BaseActionNode<"out", CreateItemInputs, never
         return getLocalItemFromSourceUuid.call(this) ? super.title : super.subtitle;
     }
 
-    get icon(): IconObject | string | null {
+    get icon(): Maybe<string | IconObject> {
         return getIconFromDoubleUuid.call(this, { unicode: "\uf466" });
     }
 

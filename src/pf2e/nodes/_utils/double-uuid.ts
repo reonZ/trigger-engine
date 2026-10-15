@@ -25,8 +25,8 @@ function getLocalItemFromSourceUuid(this: TriggerNode<any, DoubleUuidInputs>): C
 
 function getIconFromDoubleUuid(
     this: TriggerNode<any, DoubleUuidInputs>,
-    fallback: IconObject | string | null,
-): IconObject | string | null {
+    fallback: Maybe<string | IconObject>,
+): Maybe<string | IconObject> {
     const item = getLocalItemFromSourceUuid.call(this);
     return item === null ? { unicode: "\uf127" } : (item?.img ?? fallback);
 }
