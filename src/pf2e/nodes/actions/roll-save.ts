@@ -72,7 +72,7 @@ class RollSaveActionNode extends BaseActionNode<"out", Inputs, Outputs, never, n
             extraRollNotes: rollData.extraRollNotes,
             extraRollOptions: rollData.extraRollOptions,
             item: item as ItemPF2e<ActorPF2e>,
-            rollMode: isPrivate ? "blindroll" : "publicroll",
+            messageMode: isPrivate ? "blind" : "public",
             skipDialog: true,
         };
 
