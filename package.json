@@ -1,6 +1,7 @@
 {
     "name": "trigger-engine",
     "scripts": {
+        "check": "tsc --noEmit --skipLibCheck",
         "scss": "sass --style=compressed --quiet --no-charset styles/%npm_package_name%.scss:styles/%npm_package_name%.css",
         "build": "esbuild src/main.ts --bundle --keep-names --minify --sourcemap --outdir=scripts",
         "dev": "esbuild src/main.ts --bundle --keep-names --watch --sourcemap --outdir=scripts"
@@ -23,8 +24,8 @@
         "foundry-helpers": "github:reonZ/foundry-helpers"
     },
     "exports": {
-		"./types": {
-			"types": "./src/types.d.ts"
-		}
-	}
+        "./types": {
+            "types": "./src/types.d.ts"
+        }
+    }
 }
