@@ -1,12 +1,5 @@
 import { BaseActionNode } from "engine";
-import {
-    ActorItemInstances,
-    findItemWithSlug,
-    findItemWithSourceId,
-    ItemPF2e,
-    ItemType,
-    localize,
-} from "foundry-helpers";
+import { ActorItemInstances, findItemWithSlug, findItemWithSourceId, ItemPF2e, localize } from "foundry-helpers";
 import {
     DoubleUuidInputs,
     doubleUuidSchemas,
@@ -16,8 +9,8 @@ import {
 } from "pf2e";
 
 abstract class BaseEffectActionNode<
-    TEffectType extends ItemType = ItemType,
     TOutputs extends Record<string, any> | never = Record<string, any>,
+    TEffectType extends "effect" | "condition" = "effect",
 > extends BaseActionNode<"out", Inputs, TOutputs, never, never, "item" | "uuid" | "slug"> {
     static get tags(): string[] {
         return ["effect", "item"];
