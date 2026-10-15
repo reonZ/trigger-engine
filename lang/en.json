@@ -144,10 +144,9 @@
             "convertor": {
                 "item-target": "The parent actor",
                 "region-target": "The targets inside the region",
-                "target-user": "The primary owner ",
+                "target-user": "The primary owner",
                 "user-target": "The assigned actor"
             },
-
             "custom": {
                 "variable": {
                     "label": "Variable"
