@@ -9,7 +9,7 @@ import {
     isValidTargetDocuments,
 } from "foundry-helpers";
 
-class TargetEntry extends NodeEntry<TargetDocuments | undefined> {
+class TargetEntry extends NodeEntry<BaseTargetDocuments | undefined> {
     static get type(): "target" {
         return "target";
     }
@@ -40,18 +40,18 @@ class TargetEntry extends NodeEntry<TargetDocuments | undefined> {
         return value;
     }
 
-    static isValidType(value: unknown): value is TargetDocuments {
+    static isValidType(value: unknown): value is BaseTargetDocuments {
         return isValidTargetDocuments(value);
     }
 
-    static toJSON(value: TargetDocuments): { actor: ActorUUID; token?: TokenDocumentUUID } {
+    static toJSON(value: BaseTargetDocuments): { actor: ActorUUID; token?: TokenDocumentUUID } {
         return {
             actor: value.actor.uuid,
             token: value.token?.uuid,
         };
     }
 
-    static async fromJSON(value: { actor: string; token?: string }): Promise<TargetDocuments | undefined> {
+    static async fromJSON(value: { actor: string; token?: string }): Promise<BaseTargetDocuments | undefined> {
         const actor = R.isObjectType(value) ? await fromUuid<ActorPF2e>(value.actor) : undefined;
         if (!(actor instanceof Actor)) return;
 

@@ -1,7 +1,7 @@
 import { NodeEntry } from "engine";
-import { DocumentUUID, R, RegionDocumentPF2e } from "foundry-helpers";
+import { DocumentUUID, R } from "foundry-helpers";
 
-class RegionEntry extends NodeEntry<RegionDocumentPF2e | undefined> {
+class RegionEntry extends NodeEntry<RegionDocument | undefined> {
     static get type(): "region" {
         return "region";
     }
@@ -14,16 +14,16 @@ class RegionEntry extends NodeEntry<RegionDocumentPF2e | undefined> {
         return 0x4f4c42;
     }
 
-    static isValidType(value: unknown): value is RegionDocumentPF2e {
+    static isValidType(value: unknown): value is RegionDocument {
         return value instanceof RegionDocument && !value.pack;
     }
 
-    static toJSON(value: RegionDocumentPF2e): DocumentUUID {
+    static toJSON(value: RegionDocument): DocumentUUID {
         return value.uuid as DocumentUUID;
     }
 
-    static async fromJSON(value: unknown): Promise<RegionDocumentPF2e | undefined> {
-        const region = R.isString(value) ? await fromUuid<RegionDocumentPF2e>(value) : undefined;
+    static async fromJSON(value: unknown): Promise<RegionDocument | undefined> {
+        const region = R.isString(value) ? await fromUuid<RegionDocument>(value) : undefined;
         return this.isValidType(region) ? region : undefined;
     }
 }

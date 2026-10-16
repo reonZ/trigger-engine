@@ -1,7 +1,7 @@
 import { NodeEntry } from "engine";
-import { R, UserPF2e } from "foundry-helpers";
+import { R } from "foundry-helpers";
 
-class UserEntry extends NodeEntry<UserPF2e | undefined> {
+class UserEntry extends NodeEntry<User | undefined> {
     static get type(): "user" {
         return "user";
     }
@@ -14,15 +14,15 @@ class UserEntry extends NodeEntry<UserPF2e | undefined> {
         return 0x1682c9;
     }
 
-    static isValidType(value: unknown): value is UserPF2e {
+    static isValidType(value: unknown): value is User {
         return value instanceof User;
     }
 
-    static toJSON(value: UserPF2e): string {
+    static toJSON(value: User): string {
         return value.id;
     }
 
-    static async fromJSON(value: unknown): Promise<UserPF2e | undefined> {
+    static async fromJSON(value: unknown): Promise<User | undefined> {
         return R.isString(value) ? game.users.get(value) : undefined;
     }
 }

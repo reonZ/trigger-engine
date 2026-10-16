@@ -1,7 +1,7 @@
 import { NodeEntry } from "engine";
-import { ItemPF2e, ItemUUID, R } from "foundry-helpers";
+import { ItemUUID, R } from "foundry-helpers";
 
-class ItemEntry extends NodeEntry<ItemPF2e | undefined> {
+class ItemEntry extends NodeEntry<Item | undefined> {
     static get type(): "item" {
         return "item";
     }
@@ -14,16 +14,16 @@ class ItemEntry extends NodeEntry<ItemPF2e | undefined> {
         return 0x696fe0;
     }
 
-    static isValidType(value: unknown): value is ItemPF2e {
+    static isValidType(value: unknown): value is Item {
         return value instanceof Item;
     }
 
-    static toJSON(value: ItemPF2e): ItemUUID {
+    static toJSON(value: Item): ItemUUID {
         return value.uuid;
     }
 
-    static async fromJSON(value: unknown): Promise<ItemPF2e | undefined> {
-        const item = R.isString(value) ? await fromUuid<ItemPF2e>(value) : undefined;
+    static async fromJSON(value: unknown): Promise<Item | undefined> {
+        const item = R.isString(value) ? await fromUuid<Item>(value) : undefined;
         return this.isValidType(item) ? item : undefined;
     }
 }
