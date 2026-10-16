@@ -1,8 +1,7 @@
-import { TokenDocumentPF2e } from "foundry-helpers";
 import { BaseSingleHook } from ".";
 
 abstract class BaseTokenHook extends BaseSingleHook<TokenEventOptions> {
-    _onEvent(token: TokenDocumentPF2e, _context: object, userId: string): void {
+    _onEvent(token: TokenDocument, _context: object, userId: string): void {
         const user = game.users.get(userId);
         if (!user) return;
 
@@ -15,7 +14,7 @@ abstract class BaseTokenHook extends BaseSingleHook<TokenEventOptions> {
 }
 
 type TokenEventOptions = {
-    target: TargetDocuments;
+    target: BaseTargetDocuments;
     user: User;
 };
 

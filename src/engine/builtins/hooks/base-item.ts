@@ -1,8 +1,7 @@
-import { ItemPF2e } from "foundry-helpers";
 import { BaseSingleHook } from ".";
 
 abstract class BaseItemHook extends BaseSingleHook<ItemEventOptions> {
-    _onEvent(item: ItemPF2e, ...args: [...any, context: object, userId: string]): void {
+    _onEvent(item: Item, ...args: [...any, context: object, userId: string]): void {
         const userId = args.at(-1);
         const user = game.users.get(userId);
         if (!user) return;
@@ -17,8 +16,8 @@ abstract class BaseItemHook extends BaseSingleHook<ItemEventOptions> {
 
 type ItemEventOptions = {
     args: any[];
-    item: ItemPF2e;
-    parent: TargetDocuments;
+    item: Item;
+    parent: BaseTargetDocuments;
     user: User;
 };
 

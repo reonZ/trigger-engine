@@ -1,5 +1,5 @@
 import { ApplicationKey, TriggerDataInput, TriggerNode, UserValue } from "engine";
-import { ActorPF2e, MODULE } from "foundry-helpers";
+import { MODULE } from "foundry-helpers";
 
 class TriggerHook<TArgs extends Record<string, any> = Record<string, any>> {
     /**
@@ -111,7 +111,7 @@ interface TriggerHook<TArgs extends Record<string, any> = Record<string, any>> {
     executeTriggerEventAsGM(triggerId: string, event: this["events"][number], args?: TArgs): Promise<void>;
 
     /** Test if an actor is a world actor. */
-    isValidActor(actor: Maybe<ActorPF2e>): actor is ActorPF2e;
+    isValidActor<T extends Actor>(actor: Maybe<T>): actor is T;
 
     /** This is used to validate values provided by users at runtime. */
     parseUserValue(userValue: UserValue): UserValue | undefined;

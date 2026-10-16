@@ -1,8 +1,7 @@
-import { CombatantPF2e } from "foundry-helpers";
 import { BaseSingleHook } from ".";
 
-abstract class BaseCombatantHook extends BaseSingleHook<TargetDocuments> {
-    _onEvent(combatant: CombatantPF2e): void {
+abstract class BaseCombatantHook extends BaseSingleHook<BaseTargetDocuments> {
+    _onEvent(combatant: Combatant): void {
         const actor = combatant.actor;
 
         if (this.isValidActor(actor)) {
