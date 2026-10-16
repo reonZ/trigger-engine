@@ -1,5 +1,5 @@
 import { BuiltinsInputEntry } from "engine/builtins/entries";
-import { htmlQuery, localize, MODULE, UserPF2e, WaitDialogOptions } from "foundry-helpers";
+import { htmlQuery, localize, MODULE, WaitDialogOptions } from "foundry-helpers";
 import { onUserQuery } from "queries";
 import { BaseActionNode } from ".";
 import { IconObject } from "_zod";
@@ -128,7 +128,7 @@ type QueryUserArgs<T extends string = string> = {
 type QueryUserInputs = {
     timeout: number;
     title: string;
-    user?: UserPF2e;
+    user?: User;
 };
 
 export { AwaitDialogActionNode };

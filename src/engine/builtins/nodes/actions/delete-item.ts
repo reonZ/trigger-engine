@@ -1,9 +1,8 @@
-import { BuiltinsInputEntry } from "engine";
-import { ItemPF2e } from "foundry-helpers";
-import { BaseActionNode } from ".";
 import { IconObject } from "_zod";
+import { BuiltinsInputEntry } from "engine";
+import { BaseActionNode } from ".";
 
-class DeleteItemActionNode extends BaseActionNode<"out", { item?: ItemPF2e }> {
+class DeleteItemActionNode extends BaseActionNode<"out", { item?: Item }> {
     static get type(): "delete-item" {
         return "delete-item";
     }

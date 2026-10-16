@@ -1,5 +1,5 @@
 import { BaseLogicNode, BuiltinsCustomEntry, BuiltinsInputEntry, BuiltinsOutputEntry } from "engine";
-import { ItemPF2e, localize, R } from "foundry-helpers";
+import { localize, R } from "foundry-helpers";
 
 class ResolveFormulaLogicNode extends BaseLogicNode<"out", Inputs, Outputs, CustomInputs, never, States> {
     static get type(): "resolve-formula" {
@@ -67,8 +67,8 @@ class ResolveFormulaLogicNode extends BaseLogicNode<"out", Inputs, Outputs, Cust
         }
 
         const actorsAndItems = [
-            ...(await this.getCustomInputs<TargetDocuments | undefined>("actor")),
-            ...(await this.getCustomInputs<ItemPF2e | undefined>("item")),
+            ...(await this.getCustomInputs<BaseTargetDocuments | undefined>("actor")),
+            ...(await this.getCustomInputs<Item | undefined>("item")),
         ];
 
         for (const { label, value } of actorsAndItems) {

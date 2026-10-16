@@ -1,6 +1,5 @@
 import { IconObject } from "_zod";
-import { BridgeSchemaInput, loopAfterSchema, TriggerNode } from "engine";
-import { PF2eOutputEntry } from "pf2e";
+import { BridgeSchemaInput, BuiltinsOutputEntry, loopAfterSchema, TriggerNode } from "engine";
 
 class BaseConditionNode<
     TInputs extends Record<string, any> = Record<string, any>,
@@ -25,7 +24,7 @@ class BaseConditionNode<
         ];
     }
 
-    static get defineOutputs(): PF2eOutputEntry[] {
+    static get defineOutputs(): BuiltinsOutputEntry[] {
         return [{ key: "boolean", type: "boolean", state: "boolean" }];
     }
 

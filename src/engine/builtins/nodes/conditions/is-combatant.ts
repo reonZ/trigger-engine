@@ -2,7 +2,7 @@ import { BuiltinsInputEntry } from "engine";
 import { isCurrentCombatant } from "foundry-helpers";
 import { BaseConditionNode } from ".";
 
-class IsCombatantConditionNode extends BaseConditionNode<{ target?: TargetDocuments }> {
+class IsCombatantConditionNode extends BaseConditionNode<{ target?: BaseTargetDocuments }> {
     static get type(): "is-combatant" {
         return "is-combatant";
     }

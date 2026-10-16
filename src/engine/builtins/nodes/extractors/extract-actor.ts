@@ -1,8 +1,7 @@
 import { BuiltinsInputEntry } from "engine";
-import { ActorPF2e } from "foundry-helpers";
 import { BaseDocumentExtractorNode } from ".";
 
-class ActorExtractorNode extends BaseDocumentExtractorNode<TargetDocuments, ActorPF2e> {
+class ActorExtractorNode extends BaseDocumentExtractorNode<BaseTargetDocuments, Actor> {
     static get type(): "extract-actor" {
         return "extract-actor";
     }
@@ -15,7 +14,7 @@ class ActorExtractorNode extends BaseDocumentExtractorNode<TargetDocuments, Acto
         return [{ key: "input", type: "target" }];
     }
 
-    _castDocument(target: TargetDocuments): ActorPF2e {
+    _castDocument(target: BaseTargetDocuments): Actor {
         return target.actor;
     }
 }

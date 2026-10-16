@@ -1,8 +1,7 @@
 import { BuiltinsInputEntry } from "engine";
-import { TokenDocumentPF2e } from "foundry-helpers";
 import { BaseDocumentExtractorNode } from ".";
 
-class TokenExtractorNode extends BaseDocumentExtractorNode<TargetDocuments, TokenDocumentPF2e> {
+class TokenExtractorNode extends BaseDocumentExtractorNode<BaseTargetDocuments, TokenDocument> {
     static get type(): "extract-token" {
         return "extract-token";
     }
@@ -15,7 +14,7 @@ class TokenExtractorNode extends BaseDocumentExtractorNode<TargetDocuments, Toke
         return [{ key: "input", type: "target" }];
     }
 
-    _castDocument(target: TargetDocuments): TokenDocumentPF2e | undefined {
+    _castDocument(target: BaseTargetDocuments): TokenDocument | undefined {
         return this.getTargetToken(target);
     }
 }

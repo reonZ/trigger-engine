@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BaseActionNode, BuiltinsInputEntry } from "engine";
-import { R, RegionBehaviorPF2e, splitListString } from "foundry-helpers";
+import { R, splitListString } from "foundry-helpers";
 
 class CreateBehaviorActionNode<
     TState extends CreateBehaviorState | (string & {}) = CreateBehaviorState,
@@ -58,7 +58,7 @@ class CreateBehaviorActionNode<
             return this.executeNext("out");
         }
 
-        const source: PreCreate<RegionBehaviorPF2e["_source"]> = {
+        const source: PreCreate<RegionBehavior["_source"]> = {
             name: (await this.getInputValue("name")) || RegionBehavior.defaultName({ type, parent: region }),
             system: await this._getSystemSource(),
             type,
@@ -69,7 +69,7 @@ class CreateBehaviorActionNode<
         return this.executeNext("out");
     }
 
-    async _getSystemSource(): Promise<PreCreate<RegionBehaviorPF2e["_source"]>["system"]> {
+    async _getSystemSource(): Promise<PreCreate<RegionBehavior["_source"]>["system"]> {
         if (this.state === "source") {
             try {
                 const sourceStr = await this.getInputValue("source");

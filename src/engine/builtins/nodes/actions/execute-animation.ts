@@ -1,7 +1,7 @@
 import { BuiltinsCustomEntry, BuiltinsInputEntry, UserValue } from "engine";
 import { BaseActionNode } from ".";
 import { IconObject } from "_zod";
-import { R, UserPF2e } from "foundry-helpers";
+import { R } from "foundry-helpers";
 
 class ExecuteAnimationActionNode extends BaseActionNode<"out", Inputs, never, "input"> {
     static get type(): "execute-animation" {
@@ -66,14 +66,14 @@ class ExecuteAnimationActionNode extends BaseActionNode<"out", Inputs, never, "i
 }
 
 type Inputs = {
-    actor?: TargetDocuments;
+    actor?: BaseTargetDocuments;
     await: boolean;
     item?: Item;
     name: string;
     options: string[];
-    sources: TargetDocuments[];
-    targets: TargetDocuments[];
-    user?: UserPF2e;
+    sources: BaseTargetDocuments[];
+    targets: BaseTargetDocuments[];
+    user?: User;
 };
 
 declare global {
@@ -85,12 +85,12 @@ declare global {
         const api: API;
 
         type StartNodeOptions = {
-            actor: TargetDocuments | undefined;
+            actor: BaseTargetDocuments | undefined;
             item: Item | undefined;
             name: string;
             options: string[];
-            sources: TargetDocuments[];
-            targets: TargetDocuments[];
+            sources: BaseTargetDocuments[];
+            targets: BaseTargetDocuments[];
             user: User;
             userInputs: UserValue[];
         };

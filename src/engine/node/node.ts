@@ -37,7 +37,6 @@ import {
     LocalizeArgs,
     MODULE,
     R,
-    TokenDocumentPF2e,
     TokenDocumentUUID,
 } from "foundry-helpers";
 
@@ -547,7 +546,7 @@ class TriggerNode<
     get sceneContext(): Scene | undefined {
         return (this.#sceneId && game.scenes.get(this.#sceneId)) || this.#parent.sceneContext;
     }
-    set sceneContext(sceneOrToken: Maybe<Scene | TokenDocumentPF2e>) {
+    set sceneContext(sceneOrToken: Maybe<Scene | TokenDocument>) {
         const scene = sceneOrToken instanceof TokenDocument ? sceneOrToken.parent : sceneOrToken;
 
         if (scene) {

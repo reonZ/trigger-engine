@@ -1,6 +1,6 @@
 import { BaseMatchLogicNode, BuiltinsInputEntry } from "engine";
 
-class ActorsMatchLogicNode extends BaseMatchLogicNode<TargetDocuments | undefined> {
+class ActorsMatchLogicNode extends BaseMatchLogicNode<BaseTargetDocuments | undefined> {
     static get type(): "actors-match" {
         return "actors-match";
     }
@@ -16,7 +16,7 @@ class ActorsMatchLogicNode extends BaseMatchLogicNode<TargetDocuments | undefine
         ];
     }
 
-    _match(entryA: TargetDocuments | undefined, entryB: TargetDocuments | undefined): boolean {
+    _match(entryA: BaseTargetDocuments | undefined, entryB: BaseTargetDocuments | undefined): boolean {
         return entryA?.actor.uuid === entryB?.actor.uuid;
     }
 }

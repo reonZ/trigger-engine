@@ -1,6 +1,6 @@
 import { BaseEventNode, BuiltinsOutputEntry, TokenEventOptions } from "engine";
 
-abstract class BaseTokenEvent extends BaseEventNode<never, { target: TargetDocuments }> {
+abstract class BaseTokenEvent extends BaseEventNode<never, { target: BaseTargetDocuments }> {
     static get tags(): string[] {
         return ["token"];
     }

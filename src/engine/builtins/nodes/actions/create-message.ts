@@ -8,7 +8,7 @@ import {
     getDescriptionData,
     localizeKeyOrDescription,
 } from "engine";
-import { UserPF2e, primaryPlayerOwner } from "foundry-helpers";
+import { primaryPlayerOwner } from "foundry-helpers";
 import { BaseActionNode } from ".";
 
 const VISIBILITY_OPTIONS = ["all", "gm", "self"] as const;
@@ -92,8 +92,8 @@ class CreateMessageActionNode extends BaseActionNode<"out", Inputs, never, never
 }
 
 type Inputs = DescriptionInputs & {
-    author?: UserPF2e;
-    speaker?: TargetDocuments;
+    author?: User;
+    speaker?: BaseTargetDocuments;
     visibility: (typeof VISIBILITY_OPTIONS)[number];
 };
 

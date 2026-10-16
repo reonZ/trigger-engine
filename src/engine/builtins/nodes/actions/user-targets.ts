@@ -1,7 +1,7 @@
 import { IconObject } from "_zod";
 import { BuiltinsInputEntry, BuiltinsOutputEntry } from "engine";
 import { BaseActionNode } from ".";
-import { R, TokenPF2e } from "foundry-helpers";
+import { R } from "foundry-helpers";
 
 class UserTargetsActionNode extends BaseActionNode<"out", Inputs, Outputs, never, never, "all" | "only"> {
     static get type(): "user-targets" {
@@ -41,7 +41,7 @@ class UserTargetsActionNode extends BaseActionNode<"out", Inputs, Outputs, never
 
     async _execute(): Promise<boolean> {
         const user = (await this.getInputValue("user")) ?? this.userContext;
-        const userTargets = [...user.targets] as TokenPF2e[];
+        const userTargets = [...user.targets];
 
         if (this.state === "only") {
             const token = R.only(userTargets);
@@ -53,7 +53,7 @@ class UserTargetsActionNode extends BaseActionNode<"out", Inputs, Outputs, never
         } else {
             const targets = R.pipe(
                 userTargets,
-                R.map((token): TargetDocuments | undefined => {
+                R.map((token): BaseTargetDocuments | undefined => {
                     const actor = token.actor;
                     return actor ? { actor, token: token.document } : undefined;
                 }),
@@ -72,8 +72,8 @@ type Inputs = {
 };
 
 type Outputs = {
-    target: TargetDocuments;
-    targets: TargetDocuments[];
+    target: BaseTargetDocuments;
+    targets: BaseTargetDocuments[];
 };
 
 export { UserTargetsActionNode };

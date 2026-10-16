@@ -114,20 +114,20 @@ class FilterTargetsExtractorNode extends BaseExtractorNode<Inputs, Outputs, "inp
 }
 
 type SyncFunction = {
-    new (...args: any[]): (target: TargetDocuments, inputs: unknown[]) => boolean;
+    new (...args: any[]): (target: BaseTargetDocuments, inputs: unknown[]) => boolean;
 };
 
 type States = "filter" | "find" | "loop";
 
 type Inputs = {
-    targets: TargetDocuments[];
+    targets: BaseTargetDocuments[];
     callback: string;
 };
 
 type Outputs = {
-    current?: TargetDocuments;
-    target?: TargetDocuments;
-    targets: TargetDocuments[];
+    current?: BaseTargetDocuments;
+    target?: BaseTargetDocuments;
+    targets: BaseTargetDocuments[];
 };
 
 export { FilterTargetsExtractorNode };

@@ -39,10 +39,10 @@ class RegionEvent<TOutputs extends RegionEventOutputs = RegionEventOutputs> exte
 }
 
 type RegionEventOutputs = {
-    attachment?: TargetDocuments;
+    attachment?: BaseTargetDocuments;
     event: string;
     region: RegionDocument;
-    target: TargetDocuments;
+    target: BaseTargetDocuments;
 };
 
 export { RegionEvent };

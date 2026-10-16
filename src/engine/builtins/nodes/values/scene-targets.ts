@@ -1,6 +1,6 @@
 import { BuiltinsInputEntry, BuiltinsOutputEntry } from "engine";
 import { BaseValueNode } from ".";
-import { MODULE, ScenePF2e } from "foundry-helpers";
+import { MODULE } from "foundry-helpers";
 
 const DEFAULT_CALLBACK = `/**
  * @param {{actor: Actor; token: TokenDocument}} target
@@ -11,7 +11,7 @@ const DEFAULT_CALLBACK = `/**
  */
 return true;`;
 
-class SceneTargetsValueNode extends BaseValueNode<TargetDocuments[], Inputs> {
+class SceneTargetsValueNode extends BaseValueNode<BaseTargetDocuments[], Inputs> {
     static get type(): "scene-targets" {
         return "scene-targets";
     }
@@ -37,10 +37,10 @@ class SceneTargetsValueNode extends BaseValueNode<TargetDocuments[], Inputs> {
         return [{ key: "targets", type: "target", isArray: true }];
     }
 
-    async _getValue(): Promise<TargetDocuments[]> {
+    async _getValue(): Promise<BaseTargetDocuments[]> {
         const code = (await this.getInputValue("callback")) || "return true;";
-        const scene = (this.sceneContext ?? game.scenes.active) as ScenePF2e;
-        const targets = scene?.tokens.map((token): TargetDocuments | undefined => {
+        const scene = this.sceneContext ?? game.scenes.active;
+        const targets = scene?.tokens.map((token): BaseTargetDocuments | undefined => {
             const actor = token.actor;
             return actor ? { actor, token } : undefined;
         });
@@ -49,7 +49,7 @@ class SceneTargetsValueNode extends BaseValueNode<TargetDocuments[], Inputs> {
             const Fn = function () {}.constructor as SyncFunction;
             const callback = new Fn("target", code);
 
-            return targets?.filter((target): target is TargetDocuments => !!target && callback(target)) ?? [];
+            return targets?.filter((target): target is BaseTargetDocuments => !!target && callback(target)) ?? [];
         } catch (error: any) {
             MODULE.error(
                 `an error occured in the node "${this.type}" (${this.id}) of the trigger "${this.triggerPath}"`,
@@ -62,7 +62,7 @@ class SceneTargetsValueNode extends BaseValueNode<TargetDocuments[], Inputs> {
 }
 
 type SyncFunction = {
-    new (...args: any[]): (target: TargetDocuments) => boolean;
+    new (...args: any[]): (target: BaseTargetDocuments) => boolean;
 };
 
 type Inputs = {

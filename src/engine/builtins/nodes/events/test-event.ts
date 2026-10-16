@@ -2,7 +2,7 @@ import { IconObject } from "_zod";
 import { BaseEventNode, BuiltinsOutputEntry } from "engine";
 import { R } from "foundry-helpers";
 
-class TestEvent extends BaseEventNode<never, { targets: TargetDocuments[] }> {
+class TestEvent extends BaseEventNode<never, { targets: BaseTargetDocuments[] }> {
     static get functionPath(): string {
         return "game.triggerEngine.test";
     }
@@ -30,7 +30,7 @@ class TestEvent extends BaseEventNode<never, { targets: TargetDocuments[] }> {
     _execute(): Promise<boolean> {
         const targets = R.pipe(
             canvas.tokens.controlled,
-            R.map((token): TargetDocuments | null => {
+            R.map((token): BaseTargetDocuments | null => {
                 const actor = token.actor;
                 return actor ? { actor, token: token.document } : null;
             }),

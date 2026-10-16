@@ -1,8 +1,7 @@
 import { BuiltinsInputEntry } from "engine";
-import { ItemPF2e } from "foundry-helpers";
 import { BaseDocumentExtractorNode } from ".";
 
-class ItemExtractorNode extends BaseDocumentExtractorNode<ItemPF2e, ItemPF2e> {
+class ItemExtractorNode extends BaseDocumentExtractorNode<Item, Item> {
     static get type(): "extract-item" {
         return "extract-item";
     }
@@ -15,7 +14,7 @@ class ItemExtractorNode extends BaseDocumentExtractorNode<ItemPF2e, ItemPF2e> {
         return [{ key: "input", type: "item" }];
     }
 
-    _castDocument(item: ItemPF2e): ItemPF2e {
+    _castDocument(item: Item): Item {
         return item;
     }
 }

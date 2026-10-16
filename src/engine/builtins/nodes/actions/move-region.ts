@@ -56,7 +56,7 @@ class MoveRegionActionNode extends BaseActionNode<"out", Inputs, never, never, n
 
 type Inputs = {
     region?: RegionDocument;
-    target?: TargetDocuments;
+    target?: BaseTargetDocuments;
     point: Point;
 };
 

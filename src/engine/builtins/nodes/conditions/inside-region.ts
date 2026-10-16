@@ -1,5 +1,4 @@
-import { BuiltinsInputEntry } from "engine";
-import { PF2eOutputEntry } from "pf2e";
+import { BuiltinsInputEntry, BuiltinsOutputEntry } from "engine";
 import { BaseConditionNodeWithAfter } from ".";
 
 class InsideRegionConditionNode extends BaseConditionNodeWithAfter<InsideRegionInputs, InsideRegionOutputs> {
@@ -18,7 +17,7 @@ class InsideRegionConditionNode extends BaseConditionNodeWithAfter<InsideRegionI
         ];
     }
 
-    static get defineOutputs(): PF2eOutputEntry[] {
+    static get defineOutputs(): BuiltinsOutputEntry[] {
         return [...BaseConditionNodeWithAfter.defineOutputs, { key: "region", type: "region" }];
     }
 
@@ -62,7 +61,7 @@ class InsideRegionConditionNode extends BaseConditionNodeWithAfter<InsideRegionI
 
 type InsideRegionInputs = {
     name: string;
-    target?: TargetDocuments;
+    target?: BaseTargetDocuments;
 };
 
 type InsideRegionOutputs = {

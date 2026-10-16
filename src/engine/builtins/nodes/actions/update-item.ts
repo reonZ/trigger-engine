@@ -1,5 +1,4 @@
 import { BuiltinsInputEntry } from "engine";
-import { ItemPF2e } from "foundry-helpers";
 import { BaseActionNode } from ".";
 import { IconObject } from "_zod";
 
@@ -53,7 +52,7 @@ class UpdateItemActionNode extends BaseActionNode<"out", Inputs, never, never, n
 }
 
 type Inputs = {
-    item?: ItemPF2e;
+    item?: Item;
     path: string;
     value: any;
     values: any[];
