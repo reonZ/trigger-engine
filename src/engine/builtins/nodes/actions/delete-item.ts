@@ -1,7 +1,7 @@
 import { IconObject } from "_zod";
 import { BuiltinsInputEntry } from "engine";
 import { BaseActionNode } from ".";
-import { R } from "foundry-helpers";
+import { ActorUUID, R } from "foundry-helpers";
 
 class DeleteItemActionNode extends BaseActionNode<"out", { item: Item[] }> {
     static get type(): "delete-item" {
@@ -21,9 +21,20 @@ class DeleteItemActionNode extends BaseActionNode<"out", { item: Item[] }> {
     }
 
     async _execute(): Promise<boolean> {
-        await Promise.all(
-            R.map(await this.getInputValue("item"), (item) => item?.actor && !item.pack && item.delete()),
+        const byActors = R.reduce(
+            await this.getInputValue("item"),
+            (acc, item) => {
+                const actor = item.actor;
+                if (!actor || item.pack) return acc;
+                const entry = (acc[actor.uuid] ??= { actor, ids: [] });
+                entry.ids.push(item.id);
+                return acc;
+            },
+            {} as Record<ActorUUID, { actor: Actor; ids: string[] }>,
         );
+
+        await Promise.all(R.values(byActors).map(({ actor, ids }) => actor.deleteEmbeddedDocuments("Item", ids)));
+
         return this.executeNext("out");
     }
 }
