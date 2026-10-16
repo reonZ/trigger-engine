@@ -431,7 +431,7 @@
                         }
                     },
                     "delete-item": {
-                        "title": "Delete Item"
+                        "title": "Delete Item(s)"
                     },
                     "execute-animation": {
                         "groups": {

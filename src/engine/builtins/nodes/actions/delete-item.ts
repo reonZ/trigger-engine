@@ -1,8 +1,9 @@
 import { IconObject } from "_zod";
 import { BuiltinsInputEntry } from "engine";
 import { BaseActionNode } from ".";
+import { R } from "foundry-helpers";
 
-class DeleteItemActionNode extends BaseActionNode<"out", { item?: Item }> {
+class DeleteItemActionNode extends BaseActionNode<"out", { item: Item[] }> {
     static get type(): "delete-item" {
         return "delete-item";
     }
@@ -12,7 +13,7 @@ class DeleteItemActionNode extends BaseActionNode<"out", { item?: Item }> {
     }
 
     static get defineInputs(): BuiltinsInputEntry[] {
-        return [{ key: "item", type: "item" }];
+        return [{ key: "item", type: "item", isArray: true }];
     }
 
     get icon(): IconObject {
@@ -20,12 +21,9 @@ class DeleteItemActionNode extends BaseActionNode<"out", { item?: Item }> {
     }
 
     async _execute(): Promise<boolean> {
-        const item = await this.getInputValue("item");
-
-        if (item?.actor && !item.pack) {
-            await item.delete();
-        }
-
+        await Promise.all(
+            R.map(await this.getInputValue("item"), (item) => item?.actor && !item.pack && item.delete()),
+        );
         return this.executeNext("out");
     }
 }
