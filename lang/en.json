@@ -625,6 +625,9 @@
                     "extract-region": {
                         "title": "Extract From Region"
                     },
+                    "extract-token": {
+                        "title": "Extract From Token"
+                    },
                     "filter-targets": {
                         "alias": {
                             "find": {
