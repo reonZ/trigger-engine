@@ -433,6 +433,9 @@
                     "delete-item": {
                         "title": "Delete Item(s)"
                     },
+                    "delete-region": {
+                        "title": "Delete Region(s)"
+                    },
                     "execute-animation": {
                         "groups": {
                             "custom": "Custom Inputs"

@@ -8,6 +8,7 @@ import {
     CreateBehaviorActionNode,
     CreateMessageActionNode,
     DeleteItemActionNode,
+    DeleteRegionActionNode,
     ExecuteAnimationActionNode,
     ExecuteScriptActionNode,
     ExecuteTriggerActionNode,
@@ -29,6 +30,7 @@ export * from "./console-log";
 export * from "./create-behavior";
 export * from "./create-message";
 export * from "./delete-item";
+export * from "./delete-region";
 export * from "./execute-animation";
 export * from "./execute-script";
 export * from "./execute-trigger";
@@ -47,6 +49,7 @@ export default [
     CreateBehaviorActionNode,
     CreateMessageActionNode,
     DeleteItemActionNode,
+    DeleteRegionActionNode,
     ExecuteAnimationActionNode,
     ExecuteScriptActionNode,
     ExecuteTriggerActionNode,

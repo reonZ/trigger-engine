@@ -14,6 +14,10 @@ class RegionEntry extends NodeEntry<RegionDocument | undefined> {
         return 0x4f4c42;
     }
 
+    static castValue(value: unknown): unknown {
+        return value instanceof foundry.canvas.placeables.Region ? value.document : value;
+    }
+
     static isValidType(value: unknown): value is RegionDocument {
         return value instanceof RegionDocument && !value.pack;
     }
