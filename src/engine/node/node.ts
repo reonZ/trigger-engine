@@ -903,8 +903,9 @@ class TriggerNode<
      */
     getTargetToken<T extends TokenDocument>(
         target: Maybe<BaseTargetDocuments>,
-        options?: FirstActiveTokenOptions,
+        options: FirstActiveTokenOptions = {},
     ): T | undefined {
+        options.scene ??= this.sceneContext;
         return getTargetToken(target, options) as T | undefined;
     }
 
@@ -923,7 +924,8 @@ class TriggerNode<
         uuid?: false,
         options?: FirstActiveTokenOptions,
     ): T[];
-    getTargetsTokens(targets: BaseTargetDocuments[], uuid?: boolean, options?: FirstActiveTokenOptions) {
+    getTargetsTokens(targets: BaseTargetDocuments[], uuid?: boolean, options: FirstActiveTokenOptions = {}) {
+        options.scene ??= this.sceneContext;
         return getTargetsTokens(targets, uuid, options) as TokenDocumentUUID[] | TokenDocument[];
     }
 
