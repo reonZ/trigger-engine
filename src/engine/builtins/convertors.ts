@@ -14,7 +14,7 @@ const builtinsConvertors = [
     {
         output: "item",
         input: "target",
-        convertToInput: (value: ItemPF2e): TargetDocuments | undefined => {
+        convertToInput: (value: ItemPF2e): BaseTargetDocuments | undefined => {
             const actor = value.actor;
             return actor ? { actor } : undefined;
         },
@@ -37,7 +37,7 @@ const builtinsConvertors = [
     {
         output: "user",
         input: "target",
-        convertToInput: (value: UserPF2e): TargetDocuments | undefined => {
+        convertToInput: (value: UserPF2e): BaseTargetDocuments | undefined => {
             const actor = value.character;
             return actor ? { actor } : undefined;
         },
@@ -45,7 +45,7 @@ const builtinsConvertors = [
     {
         output: "target",
         input: "user",
-        convertToInput: (value: TargetDocuments, userContext): User | undefined => {
+        convertToInput: (value: BaseTargetDocuments, userContext): User | undefined => {
             return !userContext.isGM && value.actor.testUserPermission(userContext, "OWNER")
                 ? userContext
                 : (primaryPlayerOwner(value.actor) ?? undefined);
@@ -74,7 +74,7 @@ const builtinsConvertors = [
     {
         output: "region",
         input: "target",
-        convertToInput: (value: RegionDocumentPF2e | undefined): TargetDocuments[] => {
+        convertToInput: (value: RegionDocumentPF2e | undefined): BaseTargetDocuments[] => {
             return R.pipe(
                 value ? [...value.tokens] : [],
                 R.map((token) => {
