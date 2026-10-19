@@ -1,5 +1,13 @@
 import { EntryConvertor } from "engine";
-import { ItemPF2e, primaryPlayerOwner, R, RegionDocumentPF2e, UserPF2e } from "foundry-helpers";
+import {
+    getTargetToken,
+    ItemPF2e,
+    primaryPlayerOwner,
+    R,
+    RegionDocumentPF2e,
+    tokenCenter,
+    UserPF2e,
+} from "foundry-helpers";
 
 const TEXT_STRING_REGEX = /(?<x>[0-9\.]+)\s*[:,|_\/-]\s*(?<y>[0-9\.]+)/;
 
@@ -20,11 +28,10 @@ const builtinsConvertors = [
         },
     },
     {
-        output: "text",
-        input: "number",
-        convertToInput: (value: string): number => {
-            const num = Number(value.trim() || "-1");
-            return R.isNumber(num) ? num : -1;
+        output: "number",
+        input: "point",
+        convertToInput: (value: number): Point | undefined => {
+            return { x: value, y: value };
         },
     },
     {
@@ -35,11 +42,25 @@ const builtinsConvertors = [
         },
     },
     {
-        output: "user",
+        output: "region",
         input: "target",
-        convertToInput: (value: UserPF2e): BaseTargetDocuments | undefined => {
-            const actor = value.character;
-            return actor ? { actor } : undefined;
+        convertToInput: (value: RegionDocumentPF2e | undefined): BaseTargetDocuments[] => {
+            return R.pipe(
+                value ? [...value.tokens] : [],
+                R.map((token) => {
+                    const actor = token.actor;
+                    return actor ? { actor, token } : undefined;
+                }),
+                R.filter(R.isTruthy),
+            );
+        },
+    },
+    {
+        output: "target",
+        input: "point",
+        convertToInput: (value: BaseTargetDocuments): Point | undefined => {
+            const token = getTargetToken(value);
+            return token ? tokenCenter(token) : undefined;
         },
     },
     {
@@ -52,10 +73,11 @@ const builtinsConvertors = [
         },
     },
     {
-        output: "number",
-        input: "point",
-        convertToInput: (value: number): Point | undefined => {
-            return { x: value, y: value };
+        output: "text",
+        input: "number",
+        convertToInput: (value: string): number => {
+            const num = Number(value.trim() || "-1");
+            return R.isNumber(num) ? num : -1;
         },
     },
     {
@@ -72,17 +94,11 @@ const builtinsConvertors = [
         },
     },
     {
-        output: "region",
+        output: "user",
         input: "target",
-        convertToInput: (value: RegionDocumentPF2e | undefined): BaseTargetDocuments[] => {
-            return R.pipe(
-                value ? [...value.tokens] : [],
-                R.map((token) => {
-                    const actor = token.actor;
-                    return actor ? { actor, token } : undefined;
-                }),
-                R.filter(R.isTruthy),
-            );
+        convertToInput: (value: UserPF2e): BaseTargetDocuments | undefined => {
+            const actor = value.character;
+            return actor ? { actor } : undefined;
         },
     },
 ] as const satisfies EntryConvertor[];
