@@ -1,5 +1,5 @@
 import { BuiltinsInputEntry, TriggerNode } from "engine";
-import { enrichHTML } from "foundry-helpers";
+import { enrichHTML, localize } from "foundry-helpers";
 
 const descriptionStates = ["plain", "description", "localization"];
 
@@ -25,6 +25,15 @@ function descriptionSchemas(tooltip: boolean | string = true): BuiltinsInputEntr
             tooltip,
         },
     ];
+
+    return schemas;
+}
+
+function flavorDescriptionSchemas() {
+    const schemas = descriptionSchemas();
+
+    schemas[0].label = localize("builtins.shared.flavor.plain.label");
+    schemas[1].label = localize("builtins.shared.flavor.content.label");
 
     return schemas;
 }
@@ -57,5 +66,11 @@ type DescriptionInputsData = {
     plain: string | undefined;
 };
 
-export { descriptionSchemas, descriptionStates, getDescriptionData, localizeKeyOrDescription };
+export {
+    descriptionSchemas,
+    descriptionStates,
+    flavorDescriptionSchemas,
+    getDescriptionData,
+    localizeKeyOrDescription,
+};
 export type { DescriptionInputs, DescriptionInputsData, DescriptionState };

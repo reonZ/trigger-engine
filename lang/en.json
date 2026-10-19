@@ -422,12 +422,6 @@
                         "inputs": {
                             "callback": {
                                 "tooltip": "Return a string to customize the notified error<br>(Can be a localization key)"
-                            },
-                            "content": {
-                                "title": "Enriched Flavor Text"
-                            },
-                            "plain": {
-                                "title": "Flavor Text"
                             }
                         },
                         "pan": "Pan to Token",
@@ -482,6 +476,9 @@
                                 "title": "Visibility"
                             }
                         }
+                    },
+                    "create-region": {
+                        "title": "Create Region"
                     },
                     "delete-item": {
                         "title": "Delete Item(s)"
@@ -835,6 +832,14 @@
                 "extract": {
                     "input": {
                         "label": "Path"
+                    }
+                },
+                "flavor": {
+                    "content": {
+                        "label": "Enriched Flavor Text"
+                    },
+                    "plain": {
+                        "label": "Flavor Text"
                     }
                 },
                 "item-event": {

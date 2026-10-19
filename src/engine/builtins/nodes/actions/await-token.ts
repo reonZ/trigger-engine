@@ -2,9 +2,9 @@ import {
     BuiltinsInputEntry,
     BuiltinsOutputEntry,
     DescriptionInputs,
-    descriptionSchemas,
     DescriptionState,
     descriptionStates,
+    flavorDescriptionSchemas,
     getDescriptionData,
     localizeKeyOrDescription,
 } from "engine";
@@ -57,7 +57,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
     static get defineInputs(): BuiltinsInputEntry[] {
         return [
             ...super.defineInputs,
-            ...descriptionSchemas(),
+            ...flavorDescriptionSchemas(),
             {
                 key: "callback",
                 type: "text",

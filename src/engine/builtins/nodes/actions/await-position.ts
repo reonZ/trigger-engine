@@ -3,9 +3,9 @@ import { addListenerAll, htmlQuery, localize, pan, ping, R, render, tokenCenter 
 import { AwaitDialogActionNode, QueryUserArgs, QueryUserInputs } from ".";
 import {
     DescriptionInputs,
-    descriptionSchemas,
     DescriptionState,
     descriptionStates,
+    flavorDescriptionSchemas,
     getDescriptionData,
     localizeKeyOrDescription,
 } from "..";
@@ -32,7 +32,7 @@ class AwaitPositionActionNode extends AwaitDialogActionNode<
     }
 
     static get defineInputs(): BuiltinsInputEntry[] {
-        return [...super.defineInputs, ...descriptionSchemas()];
+        return [...super.defineInputs, ...flavorDescriptionSchemas()];
     }
 
     static get defineOutputs(): BuiltinsOutputEntry[] {
