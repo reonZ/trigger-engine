@@ -42,9 +42,7 @@ class NumberEntry extends BuiltInNodeEntry<number, NumberFieldSchema> {
     processValue(value: number): number {
         const { min = -Infinity, max = Infinity, step } = this.field;
         const stepped = R.isNumber(step) ? roundToStep(value, step) : value;
-        const clamped = Math.clamp(stepped, min, max);
-
-        return R.isIncludedIn(clamped, [Infinity, -Infinity]) ? 0 : clamped;
+        return Math.clamp(stepped, min, max);
     }
 }
 

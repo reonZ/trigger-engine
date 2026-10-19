@@ -4,7 +4,7 @@ import { InputField } from ".";
 class NumberField extends InputField<number, NumberFieldSchema> {
     static get defineSchema(): NodeFieldSchema {
         return {
-            default: { type: "number" },
+            default: { type: "number", const: null },
             min: { type: "number" },
             max: { type: "number" },
             step: { type: "number" },

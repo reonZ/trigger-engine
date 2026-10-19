@@ -19,7 +19,19 @@ function getFieldSchema(EntryCls: typeof NodeEntry): z.ZodType {
     if (exist) return exist;
 
     const jsonSchema = EntryCls.FieldClass?.defineSchema;
-    const fieldSchema = z.fromJSONSchema({ type: "object", properties: jsonSchema });
+    let fieldSchema = z.fromJSONSchema({ type: "object", properties: jsonSchema }) as z.ZodObject;
+
+    const looseNumbers = R.pipe(
+        jsonSchema ?? {},
+        R.entries(),
+        R.filter(([_key, value]) => value.type === "number" && value.const === null),
+        R.map(([key]) => key),
+    );
+
+    if (looseNumbers.length) {
+        const zLooseNumber = z.union([z.number(), z.literal(-Infinity), z.literal(Infinity)]);
+        fieldSchema = fieldSchema.extend(R.fromKeys(looseNumbers, () => zLooseNumber));
+    }
 
     _cachedFields.set(EntryCls.type, fieldSchema);
     return fieldSchema;
