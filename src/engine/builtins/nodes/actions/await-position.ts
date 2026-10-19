@@ -36,7 +36,7 @@ class AwaitPositionActionNode extends AwaitDialogActionNode<
     }
 
     static get defineOutputs(): BuiltinsOutputEntry[] {
-        return [{ key: "position", type: "point" }];
+        return [{ key: "position", type: "point", spacing: 1 }];
     }
 
     static async createDialog(options: PositionDialogQueryOptions): Promise<Point | false | null> {

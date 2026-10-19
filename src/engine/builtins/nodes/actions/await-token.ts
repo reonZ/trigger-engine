@@ -70,7 +70,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
     }
 
     static get defineOutputs(): BuiltinsOutputEntry[] {
-        return [{ key: "target", type: "target" }];
+        return [{ key: "target", type: "target", spacing: 1 }];
     }
 
     static async createDialog(options: TokenDialogQueryOptions): Promise<TokenDocumentUUID | false | null> {

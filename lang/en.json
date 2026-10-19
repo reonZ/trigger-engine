@@ -376,6 +376,11 @@
                             "error": "You must have one targeted token",
                             "label": "From Target"
                         },
+                        "outputs": {
+                            "position": {
+                                "title": "Coordinates"
+                            }
+                        },
                         "pan": "Pan to Location",
                         "pick": {
                             "info": "Pick a location <code>[Left-Click]</code> in the scene",
