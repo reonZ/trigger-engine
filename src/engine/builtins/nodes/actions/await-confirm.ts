@@ -34,7 +34,7 @@ class AwaitConfirmActionNode extends AwaitDialogActionNode<
     }
 
     static get defineInputs(): BuiltinsInputEntry[] {
-        return [...AwaitDialogActionNode.defineInputs, ...descriptionSchemas()];
+        return [...super.defineInputs, ...descriptionSchemas()];
     }
 
     static async createDialog(options: ConfirmDialogQueryOptions): Promise<boolean | null> {

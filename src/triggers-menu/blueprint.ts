@@ -704,10 +704,6 @@ class Blueprint extends PIXI.Application<HTMLCanvasElement> {
     }
 }
 
-type FederatedEvent = PIXI.FederatedPointerEvent & {
-    interactionData: Record<string, any>;
-};
-
 type InteractionData = {
     layerOrigin: Point;
 };

@@ -388,6 +388,17 @@
                         },
                         "title": "Await Selection"
                     },
+                    "await-token": {
+                        "pick": {
+                            "info": "Pick a token <code>[Left-Click]</code> in the scene",
+                            "label": "Scene Token"
+                        },
+                        "title": "Await Token Pick",
+                        "token": {
+                            "anonymous": "Anonymous Token",
+                            "placeholder": "No Token Selected"
+                        }
+                    },
                     "console-log": {
                         "title": "Console Log"
                     },

@@ -23,7 +23,7 @@ class AwaitSelectActionNode extends AwaitDialogActionNode<
 
     static get defineInputs(): BuiltinsInputEntry[] {
         return [
-            ...AwaitDialogActionNode.defineInputs,
+            ...super.defineInputs,
             { key: "list", type: "text", isArray: true, state: "list" },
             {
                 key: "json",

@@ -9,7 +9,7 @@ class UpdateItemEvent extends BaseItemEvent<Outputs> {
     }
 
     static get defineOutputs(): BuiltinsOutputEntry[] {
-        return [...BaseItemEvent.defineOutputs, { key: "paths", type: "text", isArray: true }];
+        return [...super.defineOutputs, { key: "paths", type: "text", isArray: true }];
     }
 
     get icon(): IconObject {

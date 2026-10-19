@@ -24,7 +24,7 @@ class AwaitInputActionNode extends AwaitDialogActionNode<
         const localizeTooltip = localize.path("builtins.shared.strings.localize.tooltip");
 
         return [
-            ...AwaitDialogActionNode.defineInputs,
+            ...super.defineInputs,
             { key: "label", type: "text", tooltip: localizeTooltip },
             { key: "placeholder", type: "text", state: "text", tooltip: localizeTooltip },
             { key: "default", type: "number", state: "number" },

@@ -32,7 +32,7 @@ class CompareNumbersLogicNode extends BaseBooleanLogicNode<Inputs> {
                 tooltip: false,
                 field: {
                     type: "select",
-                    options: CompareNumbersLogicNode.compareOptions,
+                    options: this.compareOptions,
                     connector: false,
                     width: 162,
                 },

@@ -1,0 +1,9 @@
+{{#if flavor}}
+<div class="flavor">{{flavor}}</div>
+{{/if}}
+<input type="text" class="token" placeholder="{{@root.i18n "token.placeholder"}}" value="{{token.name}}"  />
+<div class="token-buttons">
+    <button type="button" data-action="pick-token">
+        {{@root.i18n "pick.label"}}
+    </button>
+</div>

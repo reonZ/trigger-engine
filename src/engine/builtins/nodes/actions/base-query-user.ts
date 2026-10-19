@@ -45,11 +45,12 @@ class AwaitDialogActionNode<
     static async awaitQueryDialog<TQueryResult>(options: {
         buttons: foundry.applications.api.DialogV2Button[];
         content: string;
+        render?: (el: HTMLElement) => void;
         timeout: number;
         title: string;
     }): Promise<TQueryResult | false | null> {
         let intervale: NodeJS.Timeout | undefined;
-        let timeout = options.timeout ?? AwaitDialogActionNode.TIMEOUT;
+        let timeout = options.timeout ?? (this.constructor as typeof AwaitDialogActionNode).TIMEOUT;
 
         const title = options.title
             ? game.i18n.localize(options.title)
@@ -60,13 +61,16 @@ class AwaitDialogActionNode<
             content: options.content,
             buttons: options.buttons,
             render: (_, dialog) => {
+                const element = dialog.element;
+
+                options.render?.(element);
                 if (timeout <= 0) return;
 
                 setTimeout(() => {
                     dialog.close();
                 }, timeout * 1000);
 
-                const titleEl = htmlQuery(dialog.element, ".window-header .window-title");
+                const titleEl = htmlQuery(element, ".window-header .window-title");
                 if (!titleEl) return;
 
                 intervale = setInterval(() => {
@@ -114,6 +118,7 @@ class AwaitDialogActionNode<
 
             return result as TQueryResult;
         } catch (error: any) {
+            console.error(error);
             return null;
         }
     }

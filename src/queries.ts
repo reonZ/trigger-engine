@@ -3,12 +3,14 @@ import {
     AwaitConfirmActionNode,
     AwaitInputActionNode,
     AwaitSelectActionNode,
+    AwaitTokenActionNode,
     ConfirmDialogQueryOptions,
     ExecuteScriptActionNode,
     ExecuteScriptQueryOptions,
     InputDialogQueryOptions,
     QueryUserArgs,
     SelectDialogQueryOptions,
+    TokenDialogQueryOptions,
     TriggerApplication,
     TriggerPath,
 } from "engine";
@@ -25,6 +27,9 @@ async function onUserQuery(data: UserQueryOptions) {
         }
         case "await-select": {
             return AwaitSelectActionNode.createDialog(data);
+        }
+        case "await-token": {
+            return AwaitTokenActionNode.createDialog(data);
         }
         case "create-item": {
             const actors = await Promise.all(data.actors.map(async (uuid) => await fromUuid<ActorPF2e>(uuid)));
@@ -51,7 +56,8 @@ type UserQueryOptions =
     | ExecuteScriptQueryOptions
     | ExecuteTriggerQueryOptions
     | InputDialogQueryOptions
-    | SelectDialogQueryOptions;
+    | SelectDialogQueryOptions
+    | TokenDialogQueryOptions;
 
 type ExecuteTriggerQueryOptions = {
     _type: "execute-trigger";

@@ -4,6 +4,7 @@ import {
     AwaitDelayActionNode,
     AwaitInputActionNode,
     AwaitSelectActionNode,
+    AwaitTokenActionNode,
     ConsoleLogActionNode,
     CreateBehaviorActionNode,
     CreateMessageActionNode,
@@ -26,6 +27,7 @@ export * from "./await-confirm";
 export * from "./await-delay";
 export * from "./await-input";
 export * from "./await-select";
+export * from "./await-token";
 export * from "./console-log";
 export * from "./create-behavior";
 export * from "./create-message";
@@ -45,6 +47,7 @@ export default [
     AwaitDelayActionNode,
     AwaitInputActionNode,
     AwaitSelectActionNode,
+    AwaitTokenActionNode,
     ConsoleLogActionNode,
     CreateBehaviorActionNode,
     CreateMessageActionNode,
