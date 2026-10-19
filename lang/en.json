@@ -366,6 +366,23 @@
                         },
                         "title": "Await User Input"
                     },
+                    "await-position": {
+                        "from-select": {
+                            "error": "You must have one selected token",
+                            "label": "From Selection"
+                        },
+                        "from-target": {
+                            "error": "You must have one targeted token",
+                            "label": "From Target"
+                        },
+                        "pan": "Pan to Location",
+                        "pick": {
+                            "info": "Pick a location <code>[Left-Click]</code> in the scene",
+                            "label": "Pick Location"
+                        },
+                        "ping": "Ping Location",
+                        "title": "Await Coordinates"
+                    },
                     "await-select": {
                         "inputs": {
                             "json": {

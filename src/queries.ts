@@ -2,12 +2,14 @@ import {
     ApplicationKey,
     AwaitConfirmActionNode,
     AwaitInputActionNode,
+    AwaitPositionActionNode,
     AwaitSelectActionNode,
     AwaitTokenActionNode,
     ConfirmDialogQueryOptions,
     ExecuteScriptActionNode,
     ExecuteScriptQueryOptions,
     InputDialogQueryOptions,
+    PositionDialogQueryOptions,
     QueryUserArgs,
     SelectDialogQueryOptions,
     TokenDialogQueryOptions,
@@ -24,6 +26,9 @@ async function onUserQuery(data: UserQueryOptions) {
         }
         case "await-input": {
             return AwaitInputActionNode.createDialog(data);
+        }
+        case "await-position": {
+            return AwaitPositionActionNode.createDialog(data);
         }
         case "await-select": {
             return AwaitSelectActionNode.createDialog(data);
@@ -56,6 +61,7 @@ type UserQueryOptions =
     | ExecuteScriptQueryOptions
     | ExecuteTriggerQueryOptions
     | InputDialogQueryOptions
+    | PositionDialogQueryOptions
     | SelectDialogQueryOptions
     | TokenDialogQueryOptions;
 

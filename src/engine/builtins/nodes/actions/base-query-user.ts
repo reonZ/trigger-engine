@@ -82,7 +82,7 @@ class AwaitDialogActionNode<
             close: () => {
                 clearInterval(intervale);
             },
-            position: options.position,
+            position: options.position ?? {},
             window: {
                 title: timeout > 0 ? `(${timeout}) ${title}` : title,
             },

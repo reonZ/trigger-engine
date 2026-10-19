@@ -3,6 +3,7 @@ import {
     AwaitConfirmActionNode,
     AwaitDelayActionNode,
     AwaitInputActionNode,
+    AwaitPositionActionNode,
     AwaitSelectActionNode,
     AwaitTokenActionNode,
     ConsoleLogActionNode,
@@ -26,6 +27,7 @@ export * from "./attach-region";
 export * from "./await-confirm";
 export * from "./await-delay";
 export * from "./await-input";
+export * from "./await-position";
 export * from "./await-select";
 export * from "./await-token";
 export * from "./console-log";
@@ -46,6 +48,7 @@ export default [
     AwaitConfirmActionNode,
     AwaitDelayActionNode,
     AwaitInputActionNode,
+    AwaitPositionActionNode,
     AwaitSelectActionNode,
     AwaitTokenActionNode,
     ConsoleLogActionNode,

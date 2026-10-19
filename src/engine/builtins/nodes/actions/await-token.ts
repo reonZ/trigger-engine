@@ -86,16 +86,10 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
         let _token: Token | undefined;
         let _tokenInput: HTMLInputElement | null = null;
 
-        const _clearNotify = () => {
-            if (!_notify) return;
-            ui.notifications.remove(_notify.id);
-            _notify = undefined;
-        };
-
         const _setToken = (token: Token) => {
             _clearPick();
-            const actor = token.actor;
 
+            const actor = token.actor;
             if (!actor) {
                 return this.localize.error("error.actor");
             }
@@ -114,6 +108,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
 
                 if (_tokenInput) {
                     _tokenInput.value = canSeeName(document) ? document.name : this.localize("token.anonymous");
+                    panToToken(_token, { ping: true });
                 }
             } catch (error: any) {}
         };
@@ -125,10 +120,13 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
 
         const _clearPick = () => {
             canvas.tokens.off("click", _pickToken);
-            _clearNotify();
+            if (_notify) {
+                ui.notifications.remove(_notify.id);
+                _notify = undefined;
+            }
         };
 
-        const result = await this.awaitQueryDialog<boolean>({
+        const result = await this.awaitQueryDialog<TokenDocumentUUID | false>({
             ...options,
             buttons: [
                 {
@@ -136,7 +134,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
                     icon: "fa-solid fa-check",
                     label: "COMMON.Confirm",
                     default: false,
-                    callback: () => true,
+                    callback: () => _token?.document.uuid ?? null,
                 },
                 {
                     action: "no",
@@ -155,13 +153,11 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
                 if (!_tokenInput) return;
 
                 addListenerAll(html, "[data-action]", (btn) => {
-                    type Action = "pan-token" | "ping-token" | "pick-token" | "from-select" | "from-target";
-
                     const action = btn.dataset.action as Action;
 
                     switch (action) {
                         case "pan-token": {
-                            return _token && panToToken(_token);
+                            return _token && panToToken(_token, { ping: true });
                         }
 
                         case "ping-token": {
@@ -194,7 +190,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
 
         _clearPick();
 
-        return (result && _token?.document.uuid) || null;
+        return result;
     }
 
     get canStop(): boolean {
@@ -228,6 +224,8 @@ function playersCanSeeName(token: TokenDocument): boolean {
 function canSeeName(token: TokenDocument): boolean {
     return game.user.isGM || playersCanSeeName(token);
 }
+
+type Action = "pan-token" | "ping-token" | "pick-token" | "from-select" | "from-target";
 
 type Inputs = QueryUserInputs &
     DescriptionInputs & {
