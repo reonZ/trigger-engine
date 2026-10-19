@@ -43,8 +43,9 @@ class AwaitDialogActionNode<
     }
 
     static async awaitQueryDialog<TQueryResult>(options: {
-        buttons: foundry.applications.api.DialogV2Button[];
+        buttons: fa.api.DialogV2Button[];
         content: string;
+        position?: Partial<fa.ApplicationPosition>;
         render?: (el: HTMLElement) => void;
         timeout: number;
         title: string;
@@ -81,6 +82,7 @@ class AwaitDialogActionNode<
             close: () => {
                 clearInterval(intervale);
             },
+            position: options.position,
             window: {
                 title: timeout > 0 ? `(${timeout}) ${title}` : title,
             },

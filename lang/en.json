@@ -389,9 +389,33 @@
                         "title": "Await Selection"
                     },
                     "await-token": {
+                        "error": {
+                            "actor": "This token doesn't have an associated actor",
+                            "callback": "The target doesn't match the requirements."
+                        },
+                        "from-select": {
+                            "error": "You must have one selected token",
+                            "label": "From Selection"
+                        },
+                        "from-target": {
+                            "error": "You must have one targeted token",
+                            "label": "From Target"
+                        },
+                        "inputs": {
+                            "callback": {
+                                "tooltip": "Return a string to customize the notified error<br>(Can be a localization key)"
+                            },
+                            "content": {
+                                "title": "Enriched Flavor Text"
+                            },
+                            "plain": {
+                                "title": "Flavor Text"
+                            }
+                        },
+                        "pan": "Pan to Token",
                         "pick": {
                             "info": "Pick a token <code>[Left-Click]</code> in the scene",
-                            "label": "Scene Token"
+                            "label": "Pick Token"
                         },
                         "title": "Await Token Pick",
                         "token": {
