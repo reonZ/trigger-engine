@@ -1,8 +1,8 @@
 import { BaseConditionNode } from "engine";
 import { distanceBetween, TokenDocumentPF2e } from "foundry-helpers";
-import { PF2eInputEntry } from "pf2e";
+import { PF2eInputEntry, PF2eOutputEntry } from "pf2e";
 
-class InRangeConditionNode extends BaseConditionNode<Inputs> {
+class InRangeConditionNode extends BaseConditionNode<Inputs, Outputs> {
     static get type(): "in-range" {
         return "in-range";
     }
@@ -23,6 +23,10 @@ class InRangeConditionNode extends BaseConditionNode<Inputs> {
         ];
     }
 
+    static get defineOutputs(): PF2eOutputEntry[] {
+        return [{ key: "value", type: "number" }];
+    }
+
     async _execute(): Promise<boolean> {
         const scene = this.sceneContext;
         const origin = await this.getInputValue("origin");
@@ -35,9 +39,10 @@ class InRangeConditionNode extends BaseConditionNode<Inputs> {
         }
 
         const distance = await this.getInputValue("distance");
-        const inRange = distanceBetween(originToken, targetToken) <= distance;
+        const value = distanceBetween(originToken, targetToken);
 
-        return this.executeIf(!!inRange);
+        this.setOutputValue("value", value);
+        return this.executeIf(value <= distance);
     }
 }
 
@@ -45,6 +50,11 @@ type Inputs = {
     distance: number;
     origin?: TargetDocuments;
     target?: TargetDocuments;
+};
+
+type Outputs = {
+    boolean: boolean;
+    value: number;
 };
 
 export { InRangeConditionNode };
