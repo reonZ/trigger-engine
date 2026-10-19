@@ -17,7 +17,7 @@ class HasConditionConditionNode extends BaseConditionNode<Inputs, { boolean: boo
     }
 
     static get defineOutputs(): PF2eOutputEntry[] {
-        return [...BaseConditionNode.defineOutputs, { key: "value", type: "number" }];
+        return [...BaseConditionNode.defineOutputs, { key: "value", type: "number", spacing: 1 }];
     }
 
     async _execute(): Promise<boolean> {
