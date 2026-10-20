@@ -9,6 +9,7 @@ import {
     ConsoleLogActionNode,
     CreateBehaviorActionNode,
     CreateMessageActionNode,
+    CreateRegionActionNode,
     DeleteItemActionNode,
     DeleteRegionActionNode,
     ExecuteAnimationActionNode,
@@ -33,6 +34,7 @@ export * from "./await-token";
 export * from "./console-log";
 export * from "./create-behavior";
 export * from "./create-message";
+export * from "./create-region";
 export * from "./delete-item";
 export * from "./delete-region";
 export * from "./execute-animation";
@@ -54,6 +56,7 @@ export default [
     ConsoleLogActionNode,
     CreateBehaviorActionNode,
     CreateMessageActionNode,
+    CreateRegionActionNode,
     DeleteItemActionNode,
     DeleteRegionActionNode,
     ExecuteAnimationActionNode,
