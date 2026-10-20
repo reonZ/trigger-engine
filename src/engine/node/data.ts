@@ -29,6 +29,8 @@ const zNodeDataSchema = z.object({
     type: z.string().trim().readonly(),
 });
 
+type NodeCustomsData = z.output<typeof zNodeCustoms>;
+
 type NodeDataInput = z.input<NodeDataSchema>;
 type NodeDataOutput = z.output<NodeDataSchema>;
 
@@ -37,4 +39,4 @@ type NodeDataSchema = typeof zNodeDataSchema;
 type CreateNodeData = z.input<NodeDataSchema>;
 
 export { NodeData, zNodeDataSchema };
-export type { CreateNodeData, NodeDataInput, NodeDataOutput, NodeDataSchema };
+export type { CreateNodeData, NodeCustomsData, NodeDataInput, NodeDataOutput, NodeDataSchema };

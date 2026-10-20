@@ -1,82 +1,65 @@
 import { IconObject } from "_zod";
 import {
-    InputEntrySchema,
-    NodeData,
-    NodeDataInput,
-    OutputEntrySchema,
+    BuiltinsCustomEntry,
+    NodeOnCreateCustoms,
+    NodeOnCreateData,
     PERSISTENT_COLLECTION_TYPE,
-    TriggerApplication,
+    SPECIAL_CATEGORY,
+    TriggerNode,
 } from "engine";
 import { R, waitDialog } from "foundry-helpers";
-import { BaseSpecialNode } from ".";
 
-class PersistentCollection extends BaseSpecialNode<"out", { entry: unknown }, { collection: unknown[] }> {
+class PersistentCollection extends TriggerNode<"out"> {
     #collection: unknown[] = [];
+
+    static get category(): string {
+        return SPECIAL_CATEGORY;
+    }
 
     static get type(): string {
         return PERSISTENT_COLLECTION_TYPE;
     }
 
-    static async createNodeSource(application: TriggerApplication): Promise<NodeDataInput | undefined> {
-        const types = R.pipe(
-            application.availableEntryTypes,
-            R.map((type) => {
-                return {
-                    value: type,
-                    label: application.localize("entry", type, "title") ?? type,
-                };
-            }),
-            R.sortBy(R.prop("label")),
-        );
-
-        const result = await waitDialog<{ type: string }>({
-            content: "edit-entry",
-            data: { types },
-            i18n: "blueprint.special.collection.add",
-        });
-
-        if (!result) return;
-
-        return {
-            type: PERSISTENT_COLLECTION_TYPE,
-            custom: {
-                inputs: {
-                    entry: {
-                        label: "entry",
-                        slug: "entry",
-                        type: result.type,
-                    },
-                },
-            },
-        };
+    static get defineCustomInputs(): BuiltinsCustomEntry[] {
+        return [{ slug: "entry", hidden: true }];
     }
 
-    static buildInputsSchemas(data: NodeData): InputEntrySchema[] {
-        return [
-            {
-                key: "entry",
-                isArray: false,
-                spacing: 0,
-                tooltip: "",
-                type: data.custom.inputs.entry?.type ?? "any",
-            },
-        ];
+    static get defineCustomOutputs(): BuiltinsCustomEntry[] {
+        return [{ slug: "collection", array: true, hidden: true }];
     }
 
-    static buildOutputsSchemas(data: NodeData): OutputEntrySchema[] {
-        return [
-            {
-                key: "collection",
-                isArray: true,
-                spacing: 0,
-                tooltip: "",
-                type: data.custom.inputs.entry?.type ?? "any",
-            },
-        ];
+    get headerColor(): ColorSource {
+        return "#b07528";
     }
 
     get icon(): IconObject {
         return { unicode: "\ue197" };
+    }
+
+    static async _onCreate({ availableTypes }: NodeOnCreateData): Promise<NodeOnCreateCustoms | null | false> {
+        const result = await waitDialog<{ type: string }>({
+            content: "edit-entry",
+            data: { types: R.sortBy(availableTypes, R.prop("label")) },
+            i18n: R.join(["builtins.node", this.category, this.type, "dialog"], "."),
+        });
+
+        if (!result || !result.type) {
+            return false;
+        }
+
+        return {
+            inputs: {
+                entry: {
+                    type: result.type,
+                },
+            },
+            outputs: {
+                collection: {
+                    isArray: true,
+                    type: result.type,
+                },
+            },
+        };
     }
 
     async _execute(): Promise<boolean> {

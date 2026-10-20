@@ -1,4 +1,4 @@
-import { R, z } from "foundry-helpers";
+import { MODULE, R, z } from "foundry-helpers";
 import { zCollection, zDocumentId } from ".";
 
 abstract class zDocument<TSchema extends zDocumentSource = zDocumentSource> {
@@ -74,7 +74,8 @@ abstract class zDocument<TSchema extends zDocumentSource = zDocumentSource> {
             }
 
             this.#invalid = false;
-        } catch (error) {
+        } catch (error: any) {
+            MODULE.error(`an error ocurred during initialization of {${this.constructor.name}}.`, error);
             this.#invalid = true;
         }
     }

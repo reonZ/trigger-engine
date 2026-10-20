@@ -7,7 +7,7 @@ import {
     BridgeSchemaOutput,
     CustomInputSchema,
     InputEntrySchema,
-    NodeData,
+    NodeCustomsData,
     OutputEntrySchema,
     TriggerNode,
     zBaseEntrySchema,
@@ -185,7 +185,7 @@ function getNodeStates(NodeCls: typeof TriggerNode): string[] | null {
 
 type SchemasFilterOptions = {
     state?: string | null;
-    data?: NodeData;
+    data?: { custom: Partial<NodeCustomsData> };
 };
 
 export { getInputsSchemas, getNodeStates, getOutputsSchemas, getOutsSchemas };

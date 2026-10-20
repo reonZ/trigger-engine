@@ -14,7 +14,6 @@ import {
     instantiateEntry,
     isGateEntryNode,
     isGateReturnNode,
-    isSpecialTriggerNode,
     NodeBridge,
     NodeData,
     NodeEntry,
@@ -72,7 +71,6 @@ class TriggerNode<
         const isEvent = SelfCls.isEvent;
         const isEntryGate = exitGate && isGateEntryNode(nodeData);
         const isReturnGate = exitGate && isGateReturnNode(nodeData);
-        const isSpecialNode = isSpecialTriggerNode(SelfCls);
         const nodeStates = getNodeStates(SelfCls);
         const nodeState = !nodeStates
             ? null
@@ -113,7 +111,6 @@ class TriggerNode<
                 [
                     "inputs",
                     variableSchemas ?? // unique schema for variables
-                        (isSpecialNode ? SelfCls.buildInputsSchemas(nodeData) : null) ??
                         (isEntryGate ? exitGate.outputs : null) ?? // we use the exit output schemas
                         (isReturnGate ? exitGate.inputs : null) ?? // we use the exit input schemas
                         getInputsSchemas(SelfCls, { data: nodeData, state: nodeState }),
@@ -121,7 +118,6 @@ class TriggerNode<
                 [
                     "outputs",
                     variableSchemas ?? // unique schema for variables
-                        (isSpecialNode ? SelfCls.buildOutputsSchemas(nodeData) : null) ??
                         (isEntryGate ? exitGate.inputs : null) ?? // we use the exit input schemas
                         getOutputsSchemas(SelfCls, { data: nodeData, state: nodeState }),
                 ],
@@ -335,6 +331,23 @@ class TriggerNode<
 
     /** Define the custom outputs schemas if any. */
     static get defineCustomOutputs(): CustomOutputSchema[] | null {
+        return null;
+    }
+
+    /**
+     * @override
+     * Used to generate custom entries in the node directly via code.
+     * You still need to declare the custom schemas (which can have a `hidden` option)
+     *
+     * {@link TriggerNode.defineCustomInputs}
+     * {@link TriggerNode.defineCustomOutputs}
+     * {@link TriggerNode.defineCustomOuts}
+     *
+     * @param data.availableTypes is the list of all available entry types in your application.
+     *
+     * @returns the data of the node customs to add. Return `false` if you want to cancel the node creation all together.
+     */
+    static _onCreate(data: NodeOnCreateData): Promise<NodeOnCreateCustoms | null | false> | null | false {
         return null;
     }
 
@@ -1075,5 +1088,20 @@ type NodeEntries = {
     outs: Collection<string, NodeBridge>;
 };
 
+type NodeOnCreateCustomEntry = {
+    isArray?: boolean | undefined;
+    label?: string;
+    type: string;
+};
+
+type NodeOnCreateCustoms = {
+    inputs?: Record<string, NodeOnCreateCustomEntry>;
+    outputs?: Record<string, NodeOnCreateCustomEntry>;
+};
+
+type NodeOnCreateData = {
+    availableTypes: { value: string; label: string }[];
+};
+
 export { TriggerNode };
-export type { TriggerNodeCustomOutput, TriggerNodePath };
+export type { NodeOnCreateCustoms, NodeOnCreateData, TriggerNodeCustomOutput, TriggerNodePath };

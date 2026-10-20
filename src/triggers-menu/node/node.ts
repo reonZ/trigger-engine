@@ -645,10 +645,12 @@ class BlueprintNode extends PIXI.Container {
         );
     }
 
-    getCustomCategorySchemas(category: EntryCategory | "outs"): BaseCustomSchema[] {
+    getCustomCategorySchemas(category: EntryCategory | "outs", hidden: boolean = true): BaseCustomSchema[] {
         const [method, parser] = BlueprintNode.customCategoryParsers[category];
+        const schemas = (this.#node.constructor as typeof TriggerNode)[method] ?? [];
+
         return R.pipe(
-            (this.#node.constructor as typeof TriggerNode)[method] ?? [],
+            hidden ? schemas : schemas.filter((schema) => schema.hidden !== true),
             R.map((schema) => parser.safeParse(schema)?.data),
             R.filter(R.isTruthy),
         );
@@ -1094,7 +1096,7 @@ class BlueprintNode extends PIXI.Container {
     validateCustomEntryInput(
         input: CustomEntryDialogData["input"],
         schema: BaseCustomSchema,
-        result: EditEntryData,
+        result: CustomEntryDialogResult,
     ): boolean {
         if (input && schema.input?.validation) {
             const regex = new RegExp(schema.input.validation);
@@ -1153,7 +1155,7 @@ class BlueprintNode extends PIXI.Container {
             }
         }
 
-        const result = await waitDialog<EditEntryData>({
+        const result = await waitDialog<CustomEntryDialogResult>({
             content: "edit-entry",
             data: dialogData,
             i18n: "edit-entry",
@@ -1266,7 +1268,7 @@ class BlueprintNode extends PIXI.Container {
                 // we shouldn't display exit gate custom inputs as they are used on the return gate
                 if (isExitGate && category !== "outputs") continue;
 
-                const schemas = this.getCustomCategorySchemas(category);
+                const schemas = this.getCustomCategorySchemas(category, false);
 
                 for (const schema of schemas) {
                     const label = this.customEntryLabel(category, schema);
@@ -1455,7 +1457,7 @@ type CustomEntryDialogData = {
     types?: { value: string; label: string }[];
 };
 
-type EditEntryData = {
+type CustomEntryDialogResult = {
     label?: string;
     input?: string;
     array?: boolean;
@@ -1463,4 +1465,4 @@ type EditEntryData = {
 };
 
 export { BlueprintNode };
-export type { CustomEntryDialogData, PreciseTextOptions };
+export type { CustomEntryDialogData, CustomEntryDialogResult, PreciseTextOptions };

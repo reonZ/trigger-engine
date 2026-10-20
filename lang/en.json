@@ -56,15 +56,6 @@
                     "title": "Switch: {label}"
                 }
             },
-            "special": {
-                "collection": {
-                    "add": {
-                        "title": "Create Persistent Collection",
-                        "type": "Type",
-                        "yes": "Create"
-                    }
-                }
-            },
             "trigger": {
                 "back": "Back To Triggers",
                 "collapse": "Collapse Window",
@@ -286,6 +277,11 @@
                 },
                 "__special__": {
                     "__persistent_collection__": {
+                        "dialog": {
+                            "title": "Select a collection type",
+                            "type": "Collection Type",
+                            "yes": "Select"
+                        },
                         "in": "Add",
                         "outputs": {
                             "collection": {

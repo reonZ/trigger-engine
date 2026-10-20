@@ -1,11 +1,10 @@
 import { z } from "foundry-helpers";
 import { zCustomInputValue } from ".";
-import { zDocumentId } from "_zod";
 
 // data
 
 const zBaseData = z.object({
-    id: zDocumentId,
+    id: z.string().trim().min(1).default(foundry.utils.randomID).readonly(),
     input: zCustomInputValue,
     label: z.string().trim().min(1),
     slug: z.string().trim().min(1),
@@ -32,6 +31,7 @@ const zInputField = z.object({
 });
 
 const zBaseSchema = z.object({
+    hidden: z.boolean().default(false),
     input: zInputField.optional(),
     label: z.string().trim().min(1).optional(),
     slug: z.string().trim().min(1),
