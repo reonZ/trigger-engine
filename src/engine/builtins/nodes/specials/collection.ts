@@ -36,7 +36,7 @@ class PersistentCollection extends TriggerNode<"out"> {
         return { unicode: "\ue197" };
     }
 
-    static async _onCreate({ availableTypes }: NodeOnCreateData): Promise<NodeOnCreateCustoms | null | false> {
+    static async _onCreate({ availableTypes }: NodeOnCreateData): Promise<NodeOnCreateCustoms | false> {
         const result = await waitDialog<{ type: string }>({
             content: "edit-entry",
             data: { types: R.sortBy(availableTypes, R.prop("label")) },
