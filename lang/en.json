@@ -434,7 +434,7 @@
                             "info": "Pick a token <code>[Left-Click]</code> in the scene",
                             "label": "Pick Token"
                         },
-                        "title": "Await Token Pick",
+                        "title": "Await Token",
                         "token": {
                             "anonymous": "Anonymous Token",
                             "placeholder": "No Token Selected"
