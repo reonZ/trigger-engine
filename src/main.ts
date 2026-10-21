@@ -51,12 +51,14 @@ Hooks.once("init", () => {
     // we allow third party to register triggers for an existing application
     Hooks.callAll("triggerEngine.registerTriggers", TriggerApplication.registerTriggers.bind(TriggerApplication));
 
-    const regionPath = MODULE.path("builtins.region");
-    // we have a different region behavior for pf2e system
-    CONFIG.RegionBehavior.dataModels[regionPath] = SYSTEM.isPathfinder
-        ? PF2eTriggerEngineRegionBehaviorType
-        : TriggerEngineRegionBehaviorType;
-    CONFIG.RegionBehavior.typeIcons[regionPath] = "fa-solid fa-land-mine-on";
+    if (game.system.id !== "swade") {
+        const regionPath = MODULE.path("builtins.region");
+        // we have a different region behavior for pf2e system
+        CONFIG.RegionBehavior.dataModels[regionPath] = SYSTEM.isPathfinder
+            ? PF2eTriggerEngineRegionBehaviorType
+            : TriggerEngineRegionBehaviorType;
+        CONFIG.RegionBehavior.typeIcons[regionPath] = "fa-solid fa-land-mine-on";
+    }
 });
 
 Hooks.once("ready", async () => {
