@@ -1,20 +1,10 @@
 import { IconObject } from "_zod";
-import {
-    BuiltinsCustomEntry,
-    NodeOnCreateCustoms,
-    NodeOnCreateData,
-    PERSISTENT_COLLECTION_TYPE,
-    SPECIAL_CATEGORY,
-    TriggerNode,
-} from "engine";
-import { R, waitDialog } from "foundry-helpers";
+import { BuiltinsCustomEntry, NodeOnCreateCustoms, NodeOnCreateData, PERSISTENT_COLLECTION_TYPE } from "engine";
+import { R } from "foundry-helpers";
+import { BaseSpecialNode } from ".";
 
-class PersistentCollection extends TriggerNode<"out"> {
+class PersistentCollectionSpecialNode extends BaseSpecialNode<"out", Inputs, Outputs> {
     #collection: unknown[] = [];
-
-    static get category(): string {
-        return SPECIAL_CATEGORY;
-    }
 
     static get type(): string {
         return PERSISTENT_COLLECTION_TYPE;
@@ -28,24 +18,13 @@ class PersistentCollection extends TriggerNode<"out"> {
         return [{ slug: "collection", array: true, hidden: true }];
     }
 
-    get headerColor(): ColorSource {
-        return "#b07528";
-    }
-
     get icon(): IconObject {
         return { unicode: "\ue197" };
     }
 
-    static async _onCreate({ availableTypes }: NodeOnCreateData): Promise<NodeOnCreateCustoms | false> {
-        const result = await waitDialog<{ type: string }>({
-            content: "edit-entry",
-            data: { types: R.sortBy(availableTypes, R.prop("label")) },
-            i18n: R.join(["builtins.node", this.category, this.type, "dialog"], "."),
-        });
-
-        if (!result || !result.type) {
-            return false;
-        }
+    static async _onCreate(data: NodeOnCreateData): Promise<NodeOnCreateCustoms | false> {
+        const result = await this.simpleTypeDialog(data);
+        if (!result || !result.type) return false;
 
         return {
             inputs: {
@@ -76,4 +55,12 @@ class PersistentCollection extends TriggerNode<"out"> {
     }
 }
 
-export { PersistentCollection };
+type Inputs = {
+    entry: unknown;
+};
+
+type Outputs = {
+    collection: unknown;
+};
+
+export { PersistentCollectionSpecialNode };

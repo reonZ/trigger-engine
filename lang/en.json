@@ -289,6 +289,24 @@
                             }
                         },
                         "title": "Persistent Collection"
+                    },
+                    "__select_index__": {
+                        "dialog": {
+                            "title": "Select a list type",
+                            "type": "List Type",
+                            "yes": "Select"
+                        },
+                        "inputs": {
+                            "first": {
+                                "title": "Force First",
+                                "tooltip": "If <u>Index</u> is lower than O, pick the first entry."
+                            },
+                            "last": {
+                                "title": "Force Last",
+                                "tooltip": "If <u>Index</u> is greater than the last entry, pick it."
+                            }
+                        },
+                        "title": "Select List Index"
                     }
                 },
                 "action": {

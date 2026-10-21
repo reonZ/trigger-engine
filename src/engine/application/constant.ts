@@ -10,6 +10,7 @@ export const START_EVENT_TYPE = "__start_event__";
 
 export const SPECIAL_CATEGORY = "__special__";
 export const PERSISTENT_COLLECTION_TYPE = "__persistent_collection__";
+export const SELECT_INDEX_TYPE = "__select_index__";
 
 export const CONSOLE_LOG = "console-log";
 
@@ -20,5 +21,6 @@ export const RESERVED_NODE_TYPE = [
     GETTER_VARIABLE_TYPE,
     PERSISTENT_COLLECTION_TYPE,
     RETURN_GATE_TYPE,
+    SELECT_INDEX_TYPE,
     START_EVENT_TYPE,
 ] as const;
