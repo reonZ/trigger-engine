@@ -423,7 +423,7 @@ class TriggerNode<
      * `<module-id>.<application-id>.node.<category>.<type>.title`
      */
     get title(): Maybe<string> {
-        return this.localize("title");
+        return this.#data.custom.title ?? this.localize("title");
     }
 
     /**
@@ -1098,6 +1098,8 @@ type NodeOnCreateCustomEntry = {
 type NodeOnCreateCustoms = {
     inputs?: Record<string, NodeOnCreateCustomEntry>;
     outputs?: Record<string, NodeOnCreateCustomEntry>;
+    outs?: Record<string, { label?: string; slug: string }>;
+    title?: string;
 };
 
 type NodeOnCreateData = {

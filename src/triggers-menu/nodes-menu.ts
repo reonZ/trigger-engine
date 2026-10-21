@@ -290,28 +290,42 @@ class BlueprintNodesMenu extends foundry.applications.api.ApplicationV2 {
         const onCreateResult = await OtherCls._onCreate({ availableTypes: this.availableTypes });
         if (onCreateResult === false) return;
 
+        const customEntryLabel = (category: PreciseEntryCategory, entry: { label?: string; slug: string }): string => {
+            const slug = entry.slug;
+            return (
+                entry.label ??
+                this.application.localize("node", OtherCls.category, OtherCls.type, category, slug, "title") ??
+                this.application.localize("entry", slug, "title") ??
+                slug
+            );
+        };
+
+        const onCreateCustom = R.isPlainObject(onCreateResult) ? onCreateResult : {};
         const custom: Partial<NodeCustomsData> = R.pipe(
-            R.isPlainObject(onCreateResult) ? onCreateResult : {},
+            onCreateCustom,
             R.pick(["inputs", "outputs"]),
             R.mapValues((entries, category) => {
                 return R.mapValues(entries, (entry, id) => {
-                    const slug = entry.slug;
-                    const label =
-                        entry.label ??
-                        this.application.localize("node", OtherCls.category, OtherCls.type, category, slug, "title") ??
-                        this.application.localize("entry", slug, "title") ??
-                        slug;
-
                     return {
                         id,
                         isArray: entry.isArray ?? false,
-                        label,
-                        slug,
+                        label: customEntryLabel(category, entry),
+                        slug: entry.slug,
                         type: entry.type,
                     };
                 });
             }),
         );
+
+        if (R.isPlainObject(onCreateCustom.outs)) {
+            custom.outs = R.mapValues(onCreateCustom.outs, (entry, id) => {
+                return { id, slug: entry.slug, label: customEntryLabel("outs", entry) };
+            });
+        }
+
+        if (R.isString(onCreateCustom.title)) {
+            custom.title = game.i18n.localize(onCreateCustom.title);
+        }
 
         newSource.custom = {
             ...newSource.custom,
