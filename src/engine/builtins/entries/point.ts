@@ -18,12 +18,12 @@ class PointEntry extends BuiltInNodeEntry<Point, PointFieldSchema> {
         return PointField;
     }
 
-    static isValidType(value: unknown): value is Point {
-        return R.isPlainObject(value) && R.isNumber(value.x) && R.isNumber(value.y);
+    static isValidType(value: any): value is Point {
+        return R.isObjectType<Point>(value) && R.isNumber(value.x) && R.isNumber(value.y);
     }
 
-    static toJSON(value: Point): Point {
-        return value;
+    static toJSON({ x, y }: Point): Point {
+        return { x, y };
     }
 
     static fromJSON(value: JSONValue): Point {
@@ -49,13 +49,13 @@ class PointEntry extends BuiltInNodeEntry<Point, PointFieldSchema> {
         return tooltip ? `<div class="title">${label}</div><hr>${tooltip}` : label;
     }
 
-    processValue(value: Point): Point {
+    processValue({ x, y }: Point): Point {
         const step = this.field.step;
         const hasStep = R.isNumber(step) && step !== 0;
 
         return {
-            x: hasStep ? roundToStep(value.x, step) : value.x,
-            y: hasStep ? roundToStep(value.y, step) : value.y,
+            x: hasStep ? roundToStep(x, step) : x,
+            y: hasStep ? roundToStep(y, step) : y,
         };
     }
 }
