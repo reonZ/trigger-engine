@@ -1091,6 +1091,7 @@ type NodeEntries = {
 type NodeOnCreateCustomEntry = {
     isArray?: boolean | undefined;
     label?: string;
+    slug: string;
     type: string;
 };
 

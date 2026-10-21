@@ -50,12 +50,14 @@ class PersistentCollection extends TriggerNode<"out"> {
         return {
             inputs: {
                 entry: {
+                    slug: "entry",
                     type: result.type,
                 },
             },
             outputs: {
                 collection: {
                     isArray: true,
+                    slug: "collection",
                     type: result.type,
                 },
             },

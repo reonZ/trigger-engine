@@ -294,7 +294,8 @@ class BlueprintNodesMenu extends foundry.applications.api.ApplicationV2 {
             R.isPlainObject(onCreateResult) ? onCreateResult : {},
             R.pick(["inputs", "outputs"]),
             R.mapValues((entries, category) => {
-                return R.mapValues(entries, (entry, slug) => {
+                return R.mapValues(entries, (entry, id) => {
+                    const slug = entry.slug;
                     const label =
                         entry.label ??
                         this.application.localize("node", OtherCls.category, OtherCls.type, category, slug, "title") ??
@@ -302,7 +303,7 @@ class BlueprintNodesMenu extends foundry.applications.api.ApplicationV2 {
                         slug;
 
                     return {
-                        id: slug,
+                        id,
                         isArray: entry.isArray ?? false,
                         label,
                         slug,
