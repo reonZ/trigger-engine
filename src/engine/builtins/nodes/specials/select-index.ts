@@ -60,7 +60,6 @@ class SelectIndexSpecialNode extends BaseSpecialNode<"out", Inputs, Outputs> {
 
     async _execute(): Promise<boolean> {
         const list = await this.getInputValue("list");
-        console.log(list);
 
         if (!list.length) {
             return this.executeNext("out");

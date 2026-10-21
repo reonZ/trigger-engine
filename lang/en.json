@@ -135,7 +135,7 @@
             "convertor": {
                 "item-target": "The parent actor",
                 "region-target": "The targets inside the region",
-                "target-point": "The center of the token",
+                "target-point": "The coordinates of the token",
                 "target-user": "The primary owner",
                 "user-target": "The assigned actor"
             },
@@ -497,6 +497,30 @@
                         }
                     },
                     "create-region": {
+                        "customs": {
+                            "inputs": {
+                                "behavior": {
+                                    "label": "Behavior"
+                                },
+                                "shape": {
+                                    "label": "Shape"
+                                }
+                            }
+                        },
+                        "groups": {
+                            "behavior": "Behaviors",
+                            "shape": "Shapes"
+                        },
+                        "inputs": {
+                            "offset": {
+                                "title": "Offset",
+                                "tooltip": "This will be used as an offset for each shape <code>x</code> and <code>y</code> values"
+                            }
+                        },
+                        "states": {
+                            "behavior": "Behavior",
+                            "shape": "Shape"
+                        },
                         "title": "Create Region"
                     },
                     "delete-item": {

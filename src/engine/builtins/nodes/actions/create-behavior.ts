@@ -64,7 +64,9 @@ class CreateBehaviorActionNode<
             type,
         };
 
-        await region.createEmbeddedDocuments("RegionBehavior", [source]);
+        if (testBehaviorSource(source)) {
+            await region.createEmbeddedDocuments("RegionBehavior", [source]);
+        }
 
         return this.executeNext("out");
     }
@@ -73,11 +75,7 @@ class CreateBehaviorActionNode<
         if (this.state === "source") {
             try {
                 const sourceStr = await this.getInputValue("source");
-                const source = JSON.parse(sourceStr);
-
-                if (R.isPlainObject(source)) {
-                    return source;
-                }
+                return JSON.parse(sourceStr);
             } catch {}
         } else if (this.state === "trigger") {
             const events = await this.getInputValue("events");
@@ -103,6 +101,18 @@ class CreateBehaviorActionNode<
     }
 }
 
+function testBehaviorSource(source: any): boolean {
+    try {
+        const BehaviorCls = R.isString(source.type) ? CONFIG.RegionBehavior.dataModels[source.type] : null;
+        if (!BehaviorCls) return false;
+
+        const instance = new BehaviorCls(source);
+        return !instance.invalid;
+    } catch {
+        return false;
+    }
+}
+
 type CreateBehaviorInputs = Record<string, any> & {
     events: string;
     name: string;
@@ -114,5 +124,5 @@ type CreateBehaviorInputs = Record<string, any> & {
 
 type CreateBehaviorState = "source" | "trigger";
 
-export { CreateBehaviorActionNode };
+export { CreateBehaviorActionNode, testBehaviorSource };
 export type { CreateBehaviorState };

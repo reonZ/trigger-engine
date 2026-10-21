@@ -1,9 +1,10 @@
 import { IconObject } from "_zod";
-import { BuiltinsInputEntry, BuiltinsOutputEntry } from "engine";
-import { R, RegionSource, splitListString } from "foundry-helpers";
-import { BaseActionNode } from ".";
+import { BuiltinsInputEntry, BuiltinsOutputEntry, CustomInputSchema, JsonField } from "engine";
+import { DataModel, R, RegionSource, splitListString } from "foundry-helpers";
+import { BaseActionNode, parseJSONCustomInputValues, testBehaviorSource } from ".";
+const shapeTypes = foundry.data.BaseShapeData.TYPES;
 
-class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs> {
+class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "behavior" | "shape"> {
     static #inputSchema?: BuiltinsInputEntry[];
 
     static get type(): "create-region" {
@@ -140,11 +141,29 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs> {
                 }
                 return entry;
             }),
+            { key: "offset", type: "point", group: "shape" },
         ]);
     }
 
     static get defineOutputs(): BuiltinsOutputEntry[] {
         return [{ key: "region", type: "region" }];
+    }
+
+    static get defineCustomInputs(): CustomInputSchema[] {
+        return [
+            {
+                slug: "shape",
+                types: ["text"],
+                group: "shape",
+                field: { type: "json" },
+            } satisfies CustomInputSchema<JsonField>,
+            {
+                slug: "behavior",
+                types: ["text"],
+                group: "behavior",
+                field: { type: "json" },
+            } satisfies CustomInputSchema<JsonField>,
+        ];
     }
 
     get icon(): IconObject {
@@ -169,14 +188,55 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs> {
         const bottom = await this.getInputValue("bottom");
         const top = await this.getInputValue("top");
 
-        //placement
+        // placement
         const levels = await this.getInputValue("levels");
         const attachment = await this.getInputValue("attachment");
 
-        const source: DeepPartial<RegionSource> = {
+        // shapes
+        const offset = await this.getInputValue("offset");
+        const shapes = R.pipe(
+            await parseJSONCustomInputValues.call(this, "shape"),
+            R.filter((source): source is DataModel["_source"] => {
+                return R.isPlainObject(source) && R.isString(source.type) && source.type in shapeTypes;
+            }),
+            R.forEach((source) => {
+                if (R.isPlainObject(source.base)) {
+                    source.base.width ??= 1;
+                    source.base.height ??= 1;
+
+                    source.base.x = (source.base.x ?? 0) + offset.x;
+                    source.base.y = (source.base.y ?? 0) + offset.y;
+
+                    if (source.base.type === "token" && attachment) {
+                        const token = this.getTargetToken(attachment);
+                        if (token) {
+                            source.base.width = token.width;
+                            source.base.height = token.height;
+                        }
+                    }
+                } else {
+                    source.x = (source.x ?? 0) + offset.x;
+                    source.y = (source.y ?? 0) + offset.y;
+                }
+            }),
+            R.filter((source) => {
+                try {
+                    const shape = new shapeTypes[source.type as keyof typeof shapeTypes](source);
+                    return !shape.invalid;
+                } catch {
+                    return false;
+                }
+            }),
+        );
+
+        // behaviors
+        const behaviors = R.filter(await parseJSONCustomInputValues.call(this, "behavior"), testBehaviorSource);
+
+        const regionSource: DeepPartial<RegionSource> = {
             attachment: {
                 token: this.getTargetToken(attachment)?.id ?? null,
             },
+            behaviors,
             color: parsedColor && parsedColor === color ? (color as `#${string}`) : undefined,
             displayMeasurements: await this.getInputValue("displayMeasurements"),
             elevation: {
@@ -194,13 +254,18 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs> {
                 priority: await this.getInputValue("priority"),
                 type: await this.getInputValue("type"),
             },
-            visibility: await this.getInputValue("visibility"),
+            shapes: shapes,
+            visibility: Number(await this.getInputValue("visibility")) as RegionVisibilityValue,
         };
 
-        console.log(source);
-
-        // const region = await RegionCls.create(source, { parent });
-        // this.setOutputValue("region", region);
+        try {
+            const region = await RegionCls.create(regionSource, { parent });
+            if (region) {
+                this.setOutputValue("region", region);
+            }
+        } catch (err: any) {
+            console.error(err);
+        }
 
         return this.executeNext("out");
     }
@@ -209,7 +274,7 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs> {
 type AppearanceInputs = {
     name: string;
     color: string;
-    visibility: ValueOf<typeof CONST.REGION_VISIBILITY>;
+    visibility: `${RegionVisibilityValue}`;
     hidden: boolean;
     locked: boolean;
     highlightMode: "coverage" | "shapes";
@@ -233,10 +298,17 @@ type RestrictionInputs = {
     priority: number;
 };
 
-type Inputs = AppearanceInputs & ElevationInputs & PlacementInputs & RestrictionInputs;
+type Inputs = AppearanceInputs &
+    ElevationInputs &
+    PlacementInputs &
+    RestrictionInputs & {
+        offset: Point;
+    };
 
 type Outputs = {
     region: RegionDocument | undefined;
 };
+
+type RegionVisibilityValue = ValueOf<typeof CONST.REGION_VISIBILITY>;
 
 export { CreateRegionActionNode };

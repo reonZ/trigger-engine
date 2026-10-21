@@ -1,6 +1,7 @@
 import { IconObject } from "_zod";
-import { BaseActionNode, CustomInputSchema, JsonField } from "engine";
+import { BaseActionNode, CustomInputSchema, JsonField, parseJSONCustomInputValues } from "engine";
 import { ActorPF2e, R, RuleElementSource, createCustomEffect, localize } from "foundry-helpers";
+import { PF2eInputEntry } from "pf2e";
 import {
     DurationState,
     EffectInputs,
@@ -10,7 +11,6 @@ import {
     getEffectData,
     getItemTargets,
 } from ".";
-import { PF2eInputEntry } from "pf2e";
 
 class CreateEffectActionNode extends BaseActionNode<"out", Inputs, never, "rule", never, DurationState> {
     static get type(): "create-effect" {
@@ -75,20 +75,19 @@ class CreateEffectActionNode extends BaseActionNode<"out", Inputs, never, "rule"
         const parent = new ItemCls<ActorPF2e>({ type: "effect", name: "fake" }, { parent: targets[0].actor });
         const counter = await this.getInputValue("counter");
 
-        const rules = R.pipe(
-            await this.getCustomInputsValues("rule"),
-            R.map((raw) => {
+        const rules = R.filter(
+            await parseJSONCustomInputValues.call(this, "rule"),
+            (source): source is RuleElementSource => {
                 try {
-                    return JSON.parse(raw);
-                } catch (error: any) {}
-            }),
-            R.filter((source): source is RuleElementSource => {
-                const RuleCls = R.isString(source.key) ? game.pf2e.RuleElements.builtin[source.key] : null;
-                if (!RuleCls) return false;
+                    const RuleCls = R.isString(source.key) ? game.pf2e.RuleElements.builtin[source.key] : null;
+                    if (!RuleCls) return false;
 
-                const rule = new RuleCls(source, { parent });
-                return !rule.invalid;
-            }),
+                    const rule = new RuleCls(source, { parent });
+                    return !rule.invalid;
+                } catch {
+                    return false;
+                }
+            },
         );
 
         const source = createCustomEffect({

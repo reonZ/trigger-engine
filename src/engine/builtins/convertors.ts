@@ -1,13 +1,5 @@
 import { EntryConvertor } from "engine";
-import {
-    getTargetToken,
-    ItemPF2e,
-    primaryPlayerOwner,
-    R,
-    RegionDocumentPF2e,
-    tokenCenter,
-    UserPF2e,
-} from "foundry-helpers";
+import { getTargetToken, ItemPF2e, primaryPlayerOwner, R, RegionDocumentPF2e, UserPF2e } from "foundry-helpers";
 
 const TEXT_STRING_REGEX = /(?<x>[0-9\.]+)\s*[:,|_\/-]\s*(?<y>[0-9\.]+)/;
 
@@ -60,7 +52,7 @@ const builtinsConvertors = [
         input: "point",
         convertToInput: (value: BaseTargetDocuments): Point | undefined => {
             const token = getTargetToken(value);
-            return token ? tokenCenter(token) : undefined;
+            return token ? { x: token.x, y: token.y } : undefined;
         },
     },
     {

@@ -33,10 +33,7 @@ class ExecuteScriptActionNode extends BaseActionNode<"out", Inputs, never, "inpu
             {
                 key: "script",
                 type: "text",
-                field: {
-                    type: "javascript",
-                    default: DEFAULT_SCRIPT,
-                },
+                field: { type: "javascript", default: DEFAULT_SCRIPT },
                 state: "script",
             },
             {
