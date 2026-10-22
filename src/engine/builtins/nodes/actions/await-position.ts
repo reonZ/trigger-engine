@@ -151,6 +151,8 @@ class AwaitPositionActionNode extends AwaitDialogActionNode<
             },
         });
 
+        _clearPick();
+
         return result;
     }
 
