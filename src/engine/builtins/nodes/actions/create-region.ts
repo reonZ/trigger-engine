@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BuiltinsInputEntry, BuiltinsOutputEntry, CustomInputSchema, JsonField } from "engine";
-import { DataModel, R, RegionSource, splitListString } from "foundry-helpers";
+import { DataModel, R, RegionSource } from "foundry-helpers";
 import { BaseActionNode, parseJSONCustomInputValues, testBehaviorSource } from ".";
 const shapeTypes = foundry.data.BaseShapeData.TYPES;
 
@@ -189,8 +189,13 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "beh
         const top = await this.getInputValue("top");
 
         // placement
-        const levels = await this.getInputValue("levels");
         const attachment = await this.getInputValue("attachment");
+        const levels = R.pipe(
+            await this.getInputValue("levels"),
+            R.split(","),
+            R.map((str) => str.trim()),
+            R.filter((id) => parent.levels.has(id)),
+        );
 
         // shapes
         const offset = await this.getInputValue("offset");
@@ -232,6 +237,9 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "beh
         // behaviors
         const behaviors = R.filter(await parseJSONCustomInputValues.call(this, "behavior"), testBehaviorSource);
 
+        const firstSceneLevel = levels.length ? undefined : parent.levels.contents.at(0);
+        const onlyLevel = levels.length === 1 ? parent.levels.get(levels[0]) : firstSceneLevel;
+
         const regionSource: DeepPartial<RegionSource> = {
             attachment: {
                 token: this.getTargetToken(attachment)?.id ?? null,
@@ -240,13 +248,13 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "beh
             color: parsedColor && parsedColor === color ? (color as `#${string}`) : undefined,
             displayMeasurements: await this.getInputValue("displayMeasurements"),
             elevation: {
-                bottom: bottom === -Infinity ? null : bottom,
-                top: top === Infinity ? null : top,
+                bottom: bottom === -Infinity ? (onlyLevel?.elevation.bottom ?? null) : bottom,
+                top: top === Infinity ? (onlyLevel?.elevation.top ?? null) : top,
                 topInclusive: await this.getInputValue("topInclusive"),
             },
             hidden: await this.getInputValue("hidden"),
             highlightMode: await this.getInputValue("highlightMode"),
-            levels: splitListString(levels).filter((id) => parent.levels.has(id)),
+            levels: firstSceneLevel ? [firstSceneLevel.id] : levels,
             locked: await this.getInputValue("locked"),
             name: name || RegionCls.defaultName({ parent }),
             restriction: {
