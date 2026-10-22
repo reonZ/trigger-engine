@@ -152,7 +152,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
                 _tokenInput = htmlQuery(html, "input");
                 if (!_tokenInput) return;
 
-                addListenerAll(html, "[data-action]", (btn) => {
+                addListenerAll(html, "[data-action]", async (btn) => {
                     const action = btn.dataset.action as Action;
 
                     switch (action) {
@@ -167,6 +167,7 @@ class AwaitTokenActionNode extends AwaitDialogActionNode<
                         case "pick-token": {
                             if (_notify) return;
                             _notify = this.localize.info("pick.info", true);
+                            await ui.controls.activate({ control: "tokens" });
                             return canvas.tokens.on("click", _pickToken);
                         }
 
