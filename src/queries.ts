@@ -9,7 +9,10 @@ import {
     ExecuteScriptActionNode,
     ExecuteScriptQueryOptions,
     InputDialogQueryOptions,
+    PanSceneActionNode,
     PanSocketArgs,
+    PingSceneActionNode,
+    PingSocketArgs,
     PositionDialogQueryOptions,
     QueryUserArgs,
     SelectDialogQueryOptions,
@@ -17,7 +20,7 @@ import {
     TriggerApplication,
     TriggerPath,
 } from "engine";
-import { ActorPF2e, pan, R } from "foundry-helpers";
+import { ActorPF2e, R } from "foundry-helpers";
 import { CreateItemQueryOptions, processCreateTargetsEmbeddedItem } from "queries-pf2e";
 
 function onSocket(data: OnSocketArgs) {
@@ -25,9 +28,10 @@ function onSocket(data: OnSocketArgs) {
 
     switch (data._type) {
         case "pan-scene": {
-            const user = game.users.get(data.user);
-            pan(data.position, { ping: data.ping, user });
-            return;
+            return PanSceneActionNode.onSocket(data);
+        }
+        case "ping-scene": {
+            return PingSceneActionNode.onSocket(data);
         }
     }
 }
@@ -78,7 +82,7 @@ type UserQueryOptions =
     | SelectDialogQueryOptions
     | TokenDialogQueryOptions;
 
-type OnSocketArgs = PanSocketArgs;
+type OnSocketArgs = PanSocketArgs | PingSocketArgs;
 
 type ExecuteTriggerQueryOptions = {
     _type: "execute-trigger";

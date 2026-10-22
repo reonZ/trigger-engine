@@ -1,19 +1,19 @@
 import { IconObject } from "_zod";
-import { BaseActionNode, BuiltinsInputEntry } from "engine";
-import { pan, R, socketEmit } from "foundry-helpers";
+import { BaseCanvasActionNode, BaseCanvasInputs, BaseCanvasSocketArgs, BuiltinsInputEntry } from "engine";
+import { pan } from "foundry-helpers";
 
-class PanSceneActionNode extends BaseActionNode<"out", Inputs> {
+class PanSceneActionNode extends BaseCanvasActionNode<PanSocketArgs, Inputs> {
     static get type(): "pan-scene" {
         return "pan-scene";
     }
 
     static get defineInputs(): BuiltinsInputEntry[] {
-        return [
-            { key: "position", type: "point" },
-            { key: "ping", type: "boolean" },
-            { key: "user", type: "user", isArray: true },
-            { key: "all", type: "boolean" },
-        ];
+        return [...super.defineInputs, { key: "ping", type: "boolean" }];
+    }
+
+    static onSocket(data: PanSocketArgs) {
+        const user = game.users.get(data.user);
+        pan(data.position, { ...data, user });
     }
 
     get icon(): IconObject {
@@ -21,47 +21,26 @@ class PanSceneActionNode extends BaseActionNode<"out", Inputs> {
     }
 
     async _execute(): Promise<boolean> {
-        const self = game.user;
-        const all = await this.getInputValue("all");
         const ping = await this.getInputValue("ping");
         const position = await this.getInputValue("position");
-        const selectedUsers = all ? game.users.contents : await this.getInputValue("user");
-        const [[hasSelf], otherUsers] = R.partition(
-            selectedUsers.length ? selectedUsers : [this.userContext],
-            (user) => user === self,
-        );
+        const { hasSelf, otherUsers } = await this.getUsersData();
 
         if (hasSelf) {
             pan(position, { ping });
         }
 
-        if (otherUsers.length) {
-            socketEmit({
-                _type: "pan-scene",
-                _ids: otherUsers.map((user) => user.id),
-                position,
-                user: this.userContext.id,
-                ping,
-            } satisfies PanSocketArgs);
-        }
+        this.emitSocket(otherUsers, position, { ping });
 
         return this.executeNext("out");
     }
 }
 
-type Inputs = {
-    all: boolean;
+type Inputs = BaseCanvasInputs & {
     ping: boolean;
-    position: Point;
-    user: User[];
 };
 
-type PanSocketArgs = {
-    _type: "pan-scene";
-    _ids: string[];
-    user: string;
+type PanSocketArgs = BaseCanvasSocketArgs<"pan-scene"> & {
     ping?: boolean;
-    position: Point;
 };
 
 export { PanSceneActionNode };

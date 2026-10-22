@@ -17,6 +17,7 @@ import {
     ExecuteTriggerActionNode,
     // InvalidActionNode,
     MoveRegionActionNode,
+    PingSceneActionNode,
     PanSceneActionNode,
     UpdateItemActionNode,
     UserTargetsActionNode,
@@ -24,6 +25,7 @@ import {
 
 export * from "./utils";
 export * from "./base";
+export * from "./base-canvas";
 export * from "./base-query-user";
 export * from "./attach-region";
 export * from "./await-confirm";
@@ -44,6 +46,7 @@ export * from "./execute-trigger";
 // export * from "./invalid-node";
 export * from "./move-region";
 export * from "./pan-scene";
+export * from "./ping-scene";
 export * from "./update-item";
 export * from "./user-targets";
 
@@ -66,6 +69,7 @@ export default [
     ExecuteTriggerActionNode,
     // InvalidActionNode,
     MoveRegionActionNode,
+    PingSceneActionNode,
     PanSceneActionNode,
     UpdateItemActionNode,
     UserTargetsActionNode,

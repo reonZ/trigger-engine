@@ -398,12 +398,12 @@
                                 "title": "Coordinates"
                             }
                         },
-                        "pan": "Pan to Location",
+                        "pan": "Pan to Coordinates",
                         "pick": {
-                            "info": "Pick a location <code>[Left-Click]</code> in the scene",
-                            "label": "Pick Location"
+                            "info": "Pick a Position <code>[Left-Click]</code> in the scene",
+                            "label": "Pick Coordinates"
                         },
-                        "ping": "Ping Location",
+                        "ping": "Ping Coordinates",
                         "title": "Await Coordinates"
                     },
                     "await-select": {
@@ -600,10 +600,27 @@
                                 "title": "All Users"
                             },
                             "ping": {
-                                "title": "Also Ping"
+                                "title": "Also Ping",
+                                "tooltip": "This is done on a per-user basis locally"
                             }
                         },
                         "title": "Pan to Coordinates"
+                    },
+                    "ping-scene": {
+                        "inputs": {
+                            "all": {
+                                "title": "All Users"
+                            },
+                            "delay": {
+                                "title": "Delay",
+                                "tooltip": "Amount of time (in ms) between each instance"
+                            },
+                            "instances": {
+                                "title": "Instances",
+                                "tooltip": "Number of times the ping is emitted"
+                            }
+                        },
+                        "title": "Ping Coordinates"
                     },
                     "update-item": {
                         "inputs": {
