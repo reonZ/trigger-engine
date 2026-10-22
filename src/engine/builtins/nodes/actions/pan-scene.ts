@@ -27,7 +27,7 @@ class PanSceneActionNode extends BaseActionNode<"out", Inputs> {
         const position = await this.getInputValue("position");
         const selectedUsers = all ? game.users.contents : await this.getInputValue("user");
         const [[hasSelf], otherUsers] = R.partition(
-            selectedUsers.length ? selectedUsers : [self],
+            selectedUsers.length ? selectedUsers : [this.userContext],
             (user) => user === self,
         );
 
