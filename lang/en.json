@@ -613,7 +613,7 @@
                             },
                             "delay": {
                                 "title": "Delay",
-                                "tooltip": "Amount of time (in ms) between each instance"
+                                "tooltip": "Amount of time (in ms) before a new instance is emitted (without waiting for the previous one)"
                             },
                             "instances": {
                                 "title": "Instances",

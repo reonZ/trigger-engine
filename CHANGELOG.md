@@ -1,3 +1,49 @@
+# 1.37.0
+
+- now feed `sceneContext` to `TriggerNode#getTargetToken` if `options.scene` isn't provided
+- move some outputs in a few nodes to reduce their width when possible
+  - it won't break anything, just some outputs get one row lower than they were before
+- add new `TriggerNode._onCreate` method
+  - it is called right before a node is created in the blueprint
+  - used to return custom data to add directly to the node's source at creation
+    - you still need to declare the custom entries schemas to use thoses
+  - if you instead return `false`, the node creation will be cancelled
+- add `hidden` property to custom entry schemas
+  - when `true`, the module will not offer users to add custom entries of that `slug` to the node
+  - it is useful in conjunction with the new `TriggerNode._onCreate` to only add custom entries via code
+- add new `TriggerNode#module` getter
+  - display a special icon related to modules when a string is returned
+- `Delete Item`:
+  - rename to `Delete Item(s)`
+  - convert the input into an array of `item` to delete in bundle (this doesn't break any existing connection)
+- `Is In Range`:
+  - now returns the actual distance value in the outputs
+- add new `target -> point` convertor
+  - it retrieves the coordinates of the token's center
+- add new `Await Coordinates` action node
+  - the node queries the selected user to pick a location on the scene
+- add new `Await Token` action node
+  - the node queries the selected user to pick a token on the scene
+- add new `Create Region` action node
+- add new `Delete Region(s)` action node
+- add new `Extract from Token` extractor node (we are talking about the token document)
+- add new `Pan to Coordinates` action node
+  - the `userContext` is automatically used if the `All Users` is not enabled and no users are provided
+  - the generated ping from `Also Ping` is local to each client selected
+- add new `Ping Coordinates` action node
+  - the `userContext` is automatically used if the `All Users` is not enabled and no users are provided
+- add new `Select List Index` special node
+  - the node returns the list entry at the provided `index`
+  - you can clamp the index to always return an entry (if any in the list)
+- add new `Snap to Grid` logic node
+  - only square grid is supported for now
+- fix `Token Moved` event never triggering
+- fix region behavior being declared too late and causing a breaking error when moving a token on a scene that already contained a region with the behavior on client load
+  - no longer register the behavior when running on the `SWADE` system due to a world breaking error (hoping for an eventual fix on their part)
+- `pf2e-trigger`:
+  - all action nodes that create items (e.g. `Create Item`, `Create Effect`, etc.) will now filter out actors that cannot receive the specific item type before proceeding
+  - fix `Roll Save` action node `Private` option using deprecated foundry code
+
 # 1.36.0
 
 - the `TriggerApplication#convertObjectToEmitable` now embeds the conversion arguments in the resulting object
