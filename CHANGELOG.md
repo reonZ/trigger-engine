@@ -19,7 +19,7 @@
 - `Is In Range`:
   - now returns the actual distance value in the outputs
 - add new `target -> point` convertor
-  - it retrieves the coordinates of the token's center
+  - it retrieves the coordinates of the token
 - add new `Await Coordinates` action node
   - the node queries the selected user to pick a location on the scene
 - add new `Await Token` action node
