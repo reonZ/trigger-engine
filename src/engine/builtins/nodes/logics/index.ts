@@ -4,6 +4,7 @@ import {
     CompareNumbersLogicNode,
     FormatTextLogicNode,
     ResolveFormulaLogicNode,
+    SnapGridLogicNode,
     TextsMatchLogicNode,
 } from ".";
 
@@ -15,6 +16,7 @@ export * from "./break-loop";
 export * from "./compare-numbers";
 export * from "./format-text";
 export * from "./resolve-formula";
+export * from "./snap-grid";
 export * from "./texts-match";
 
 export default [
@@ -23,5 +25,6 @@ export default [
     CompareNumbersLogicNode,
     FormatTextLogicNode,
     ResolveFormulaLogicNode,
+    SnapGridLogicNode,
     TextsMatchLogicNode,
 ] as const;

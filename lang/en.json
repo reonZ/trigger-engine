@@ -217,6 +217,9 @@
                 "point": {
                     "title": "Point"
                 },
+                "position": {
+                    "title": "Position"
+                },
                 "step": {
                     "title": "Step"
                 },
@@ -784,6 +787,25 @@
                             }
                         },
                         "title": "Resolve Formula"
+                    },
+                    "snap-grid": {
+                        "inputs": {
+                            "squareH": {
+                                "title": "Horizontal Snapping"
+                            },
+                            "squareV": {
+                                "title": "Vertical Snapping"
+                            }
+                        },
+                        "outputs": {
+                            "snapped": {
+                                "title": "Snapped"
+                            }
+                        },
+                        "title": "Snap to Grid",
+                        "titles": {
+                            "square": "Snap to Square Grid"
+                        }
                     },
                     "texts-match": {
                         "title": "Texts Match"
