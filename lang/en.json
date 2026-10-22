@@ -594,6 +594,17 @@
                         },
                         "title": "Move Scene Region"
                     },
+                    "pan-scene": {
+                        "inputs": {
+                            "all": {
+                                "title": "All Users"
+                            },
+                            "ping": {
+                                "title": "Also Ping"
+                            }
+                        },
+                        "title": "Pan to Coordinates"
+                    },
                     "update-item": {
                         "inputs": {
                             "path": {

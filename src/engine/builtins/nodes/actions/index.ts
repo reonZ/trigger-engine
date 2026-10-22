@@ -17,6 +17,7 @@ import {
     ExecuteTriggerActionNode,
     // InvalidActionNode,
     MoveRegionActionNode,
+    PanSceneActionNode,
     UpdateItemActionNode,
     UserTargetsActionNode,
 } from ".";
@@ -42,6 +43,7 @@ export * from "./execute-script";
 export * from "./execute-trigger";
 // export * from "./invalid-node";
 export * from "./move-region";
+export * from "./pan-scene";
 export * from "./update-item";
 export * from "./user-targets";
 
@@ -64,6 +66,7 @@ export default [
     ExecuteTriggerActionNode,
     // InvalidActionNode,
     MoveRegionActionNode,
+    PanSceneActionNode,
     UpdateItemActionNode,
     UserTargetsActionNode,
 ] as const;

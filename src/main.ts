@@ -7,9 +7,9 @@ import {
     TriggerHook,
     TriggerNode,
 } from "engine";
-import { MODULE, R, registerSetting, SYSTEM } from "foundry-helpers";
+import { MODULE, R, registerSetting, socketOn, SYSTEM } from "foundry-helpers";
 import { PF2eTriggerEngineRegionBehaviorType, registerPF2eApplication } from "pf2e";
-import { onUserQuery } from "queries";
+import { onSocket, onUserQuery } from "queries";
 import { id } from "../module.json";
 
 MODULE.register(id);
@@ -26,6 +26,7 @@ Hooks.once("init", () => {
         },
     });
 
+    socketOn(onSocket);
     CONFIG.queries[MODULE.path("user-query")] = onUserQuery;
 
     // we register the pf2e-trigger application
