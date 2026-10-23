@@ -1,3 +1,7 @@
+# 1.37.1
+
+- fix `Delete Region(s)` action node not working
+
 # 1.37.0
 
 - now feed `sceneContext` to `TriggerNode#getTargetToken` if `options.scene` isn't provided
