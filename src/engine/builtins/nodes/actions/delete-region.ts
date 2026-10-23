@@ -33,7 +33,7 @@ class DeleteRegionActionNode extends BaseActionNode<"out", { region: RegionDocum
             {} as Record<string, { scene: Scene; ids: string[] }>,
         );
 
-        await Promise.all(R.values(byScenes).map(({ scene, ids }) => scene.deleteEmbeddedDocuments("Item", ids)));
+        await Promise.all(R.values(byScenes).map(({ scene, ids }) => scene.deleteEmbeddedDocuments("Region", ids)));
 
         return this.executeNext("out");
     }
