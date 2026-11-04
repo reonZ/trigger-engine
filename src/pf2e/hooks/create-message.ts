@@ -163,11 +163,7 @@ async function getMessageData(
     return { originActor, targets };
 }
 
-async function checkRollData(
-    user: UserPF2e,
-    message: ChatMessagePF2e,
-    reroll?: boolean,
-): Promise<CheckRollOptions | undefined> {
+async function checkRollData(user: UserPF2e, message: ChatMessagePF2e): Promise<CheckRollOptions | undefined> {
     const { context, origin } = message.flags[SYSTEM.id] as { context: CheckContextChatFlag; origin?: ItemOriginFlag };
     const roller = { actor: message.actor, token: message.token };
     if (!isValidTargetDocuments(roller)) return;
@@ -178,13 +174,13 @@ async function checkRollData(
 
     return {
         dc: context.dc?.value,
-        isReroll: reroll ?? context.isReroll,
+        isReroll: context.isReroll,
         item: message.item,
         options: context.options ?? [],
         origin: originActor ? { actor: originActor, token: originToken } : undefined,
         outcome: context.outcome,
         roller,
-        target: message.target ?? undefined,
+        target: isValidTargetDocuments(message.target) ? message.target : undefined,
         type: context.type,
         user,
     };

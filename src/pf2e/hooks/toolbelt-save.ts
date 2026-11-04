@@ -1,9 +1,10 @@
 import { TriggerHook } from "engine";
-import { createToggleHook } from "foundry-helpers";
-import { checkRollData } from ".";
+import { createToggleHook, SYSTEM } from "foundry-helpers";
+import { checkRollData, CheckRollOptions } from ".";
 
 class ToolbeltSaveHook extends TriggerHook {
-    #hook = createToggleHook(["pf2e-toolbelt.rollSave", "pf2e-toolbelt.rerollSave"], this.#onToolbeltSave.bind(this));
+    #saveHook = createToggleHook("pf2e-toolbelt.rollSave", this.#onToolbeltSave.bind(this));
+    #rerollHook = createToggleHook("pf2e-toolbelt.rerollSave", this.#onToolbeltReroll.bind(this));
 
     get events(): ["check-roll-event"] {
         return ["check-roll-event"];
@@ -14,15 +15,36 @@ class ToolbeltSaveHook extends TriggerHook {
     }
 
     _enable() {
-        this.#hook.activate();
+        this.#saveHook.activate();
+        this.#rerollHook.activate();
     }
 
     _disable() {
-        this.#hook.disable();
+        this.#saveHook.disable();
+        this.#rerollHook.disable();
     }
 
-    async #onToolbeltSave({ data, message, rollMessage }: toolbelt.targetHelper.RollSaveHook) {
-        const checkData = await checkRollData(game.user, rollMessage ?? message, !!data.rerolled);
+    async #onToolbeltReroll({ rollMessageData }: toolbelt.targetHelper.RerollSaveHook) {
+        const fakeMessage = {
+            ...rollMessageData,
+            flags: {
+                [SYSTEM.id]: {
+                    context: rollMessageData.context,
+                    origin: rollMessageData.origin,
+                },
+            },
+        } as any;
+
+        const checkData = await checkRollData(game.user, fakeMessage);
+        this.#executeEvent(checkData);
+    }
+
+    async #onToolbeltSave({ rollMessage }: toolbelt.targetHelper.RollSaveHook) {
+        const checkData = await checkRollData(game.user, rollMessage);
+        this.#executeEvent(checkData);
+    }
+
+    #executeEvent(checkData: Maybe<CheckRollOptions>) {
         if (!checkData) return;
 
         if (game.user.isGM) {
