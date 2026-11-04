@@ -1,6 +1,6 @@
 import { IconObject } from "_zod";
 import { BaseActionNode, BuiltinsInputEntry } from "engine";
-import { R, splitListString } from "foundry-helpers";
+import { MODULE, splitListString } from "foundry-helpers";
 
 class CreateBehaviorActionNode<
     TState extends CreateBehaviorState | (string & {}) = CreateBehaviorState,
@@ -64,8 +64,10 @@ class CreateBehaviorActionNode<
             type,
         };
 
-        if (testBehaviorSource(source)) {
+        try {
             await region.createEmbeddedDocuments("RegionBehavior", [source]);
+        } catch (err: any) {
+            MODULE.error("an error occured while trying to create a behavior", err);
         }
 
         return this.executeNext("out");
@@ -101,18 +103,6 @@ class CreateBehaviorActionNode<
     }
 }
 
-function testBehaviorSource(source: any): boolean {
-    try {
-        const BehaviorCls = R.isString(source.type) ? CONFIG.RegionBehavior.dataModels[source.type] : null;
-        if (!BehaviorCls) return false;
-
-        const instance = new BehaviorCls(source);
-        return !instance.invalid;
-    } catch {
-        return false;
-    }
-}
-
 type CreateBehaviorInputs = Record<string, any> & {
     events: string;
     name: string;
@@ -124,5 +114,5 @@ type CreateBehaviorInputs = Record<string, any> & {
 
 type CreateBehaviorState = "source" | "trigger";
 
-export { CreateBehaviorActionNode, testBehaviorSource };
+export { CreateBehaviorActionNode };
 export type { CreateBehaviorState };

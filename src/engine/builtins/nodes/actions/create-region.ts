@@ -1,7 +1,7 @@
 import { IconObject } from "_zod";
 import { BuiltinsInputEntry, BuiltinsOutputEntry, CustomInputSchema, JsonField } from "engine";
-import { DataModel, R, RegionSource } from "foundry-helpers";
-import { BaseActionNode, parseJSONCustomInputValues, testBehaviorSource } from ".";
+import { DataModel, MODULE, R, RegionSource } from "foundry-helpers";
+import { BaseActionNode, parseJSONCustomInputValues } from ".";
 const shapeTypes = foundry.data.BaseShapeData.TYPES;
 
 class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "behavior" | "shape"> {
@@ -235,7 +235,15 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "beh
         );
 
         // behaviors
-        const behaviors = R.filter(await parseJSONCustomInputValues.call(this, "behavior"), testBehaviorSource);
+        const behaviors = R.filter(await parseJSONCustomInputValues.call(this, "behavior"), (source) => {
+            try {
+                if (!(source.type in CONFIG.RegionBehavior.dataModels)) return false;
+                const instance = new RegionBehavior.implementation(source);
+                return !instance.invalid;
+            } catch {
+                return false;
+            }
+        });
 
         const firstSceneLevel = levels.length ? undefined : parent.levels.contents.at(0);
         const onlyLevel = levels.length === 1 ? parent.levels.get(levels[0]) : firstSceneLevel;
@@ -272,7 +280,7 @@ class CreateRegionActionNode extends BaseActionNode<"out", Inputs, Outputs, "beh
                 this.setOutputValue("region", region);
             }
         } catch (err: any) {
-            console.error(err);
+            MODULE.error("an error occured while trying to create a region", err);
         }
 
         return this.executeNext("out");
