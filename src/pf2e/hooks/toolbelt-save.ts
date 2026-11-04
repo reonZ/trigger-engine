@@ -33,9 +33,9 @@ class ToolbeltSaveHook extends TriggerHook {
                     origin: rollMessageData.origin,
                 },
             },
-        } as any;
+        } satisfies ChatMessageLike;
 
-        const checkData = await checkRollData(game.user, fakeMessage);
+        const checkData = await checkRollData(game.user, fakeMessage as any);
         this.#executeEvent(checkData);
     }
 
@@ -62,5 +62,9 @@ class ToolbeltSaveHook extends TriggerHook {
         }
     }
 }
+
+type ChatMessageLike = toolbelt.targetHelper.RerollMessageData & {
+    flags: { [SYSTEM_ID]: toolbelt.targetHelper.RerollMessageDataFlags };
+};
 
 export { ToolbeltSaveHook };
