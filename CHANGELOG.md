@@ -1,3 +1,13 @@
+# 1.38.0
+
+- fix not being able to use the `Create Region` action node with at least one behavior
+- `pf2e-trigger`:
+  - now enforce min version of the pf2e/sf2e systems and won't prepare the application if using systems version older than required
+    - this release requires you to update the systems to versions `8.7.0` & `1.7.0`
+  - update aura related code to work with the latest systems version
+  - fix `Check Rolled` event node breaking on reroll originating from the `PF2e Toolbelt` module
+    - requires updating the `PF2e Toolbelt` module to version `3.60.0`
+
 # 1.37.1
 
 - fix `Delete Region(s)` action node not working
