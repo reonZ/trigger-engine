@@ -14,6 +14,11 @@ import { id } from "../module.json";
 
 MODULE.register(id);
 
+const SYSTEM_VERSIONS = {
+    pf2e: "8.7.0",
+    sf2e: "1.7.0",
+};
+
 Hooks.once("init", () => {
     registerSetting("stretched", {
         type: Boolean,
@@ -30,7 +35,7 @@ Hooks.once("init", () => {
     CONFIG.queries[MODULE.path("user-query")] = onUserQuery;
 
     // we register the pf2e-trigger application
-    if (SYSTEM.isPathfinder) {
+    if (SYSTEM.isPathfinder && SYSTEM.isVersion(SYSTEM_VERSIONS)) {
         registerPF2eApplication();
     }
 
