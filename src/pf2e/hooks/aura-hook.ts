@@ -5,6 +5,7 @@ import {
     R,
     ScenePF2e,
     TokenAura,
+    TokenDisposition,
     TokenDocumentPF2e,
     activateHooksAndWrappers,
     createToggleWrapper,
@@ -25,14 +26,17 @@ class AuraHook extends TriggerHook<AuraEventOptions> {
             { context: this },
         ),
         createToggleWrapper(
-            "WRAPPER",
-            "CONFIG.Token.documentClass.prototype.simulateUpdate",
-            this.#tokenSimulateUpdate,
+            "OVERRIDE", //
+            "CONFIG.Token.documentClass.prototype.checkAuras",
+            this.#tokenCheckAuras,
             { context: this },
         ),
-        createToggleWrapper("WRAPPER", "CONFIG.Scene.documentClass.prototype.prepareData", this.#scenePF2ePrepareData, {
-            context: this,
-        }),
+        createToggleWrapper(
+            "WRAPPER", //
+            "CONFIG.Scene.documentClass.prototype.prepareData",
+            this.#scenePF2ePrepareData,
+            { context: this },
+        ),
     ];
 
     get events(): ["aura-enter-event", "aura-leave-event"] {
@@ -86,6 +90,43 @@ class AuraHook extends TriggerHook<AuraEventOptions> {
         }
     }
 
+    /**
+     * https://github.com/foundryvtt/pf2e/blob/52dfeee703b887237f5e454747bcae45b136f9af/src/module/scene/token-document/document.ts#L502
+     */
+    #tokenCheckAuras(
+        token: TokenDocumentPF2e,
+        prior?: {
+            auras: Omit<TokenAura, "appearance" | "token">[];
+            disposition: TokenDisposition | null;
+        },
+    ): void {
+        if (!token.scene?.isInFocus && !token.scene?.isView) return;
+        const performReset = !prior;
+        prior ??= {
+            auras: token.auras
+                .values()
+                .map((a) => R.omit(a, ["appearance", "token"]))
+                .toArray(),
+            disposition: token.disposition,
+        };
+        if (performReset) token.reset();
+        const current = {
+            auras: token.auras
+                .values()
+                .map((a) => R.omit(a, ["appearance", "token"]))
+                .toArray(),
+            disposition: token.disposition,
+        };
+
+        if (
+            prior.disposition !== current.disposition ||
+            (!!token.scene?.isInFocus && !R.isDeepEqual(prior.auras, current.auras))
+        ) {
+            token.scene?.checkAuras();
+            this.#checkAuras();
+        }
+    }
+
     #tokenPrepareBaseData(token: TokenDocumentPF2e, wrapped: libWrapper.RegisterCallback) {
         wrapped();
 
@@ -96,21 +137,12 @@ class AuraHook extends TriggerHook<AuraEventOptions> {
         }
     }
 
-    #tokenSimulateUpdate(
-        _token: TokenDocumentPF2e,
-        wrapped: libWrapper.RegisterCallback,
-        actorUpdates?: Record<string, unknown>,
-    ): void {
-        wrapped(actorUpdates);
-        this.#checkTokensAuras();
-    }
-
     #scenePF2ePrepareData(_scene: ScenePF2e, wrapped: libWrapper.RegisterCallback) {
         wrapped();
-        this.#checkTokensAuras();
+        this.#checkAuras();
     }
 
-    #checkTokensAuras() {
+    #checkAuras() {
         const tokens = getSceneTokens();
         const sceneActors = getTokensActors(tokens);
         const tokensAuras = tokens.flatMap((token) => Array.from(token.auras.values()));
